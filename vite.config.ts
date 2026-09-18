@@ -146,9 +146,6 @@ function authPopupPlugin(): Plugin {
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
 export default defineConfig(({ command, isPreview }) => ({
-  // Production sits behind apps.kulibert.net/bistro (school filters block *.vercel.app).
-  // Live preview stays at / so :8080 keeps working.
-  base: process.env.VERCEL ? "/bistro/" : "/",
   server: {
     host: "0.0.0.0",
     port: 8080,

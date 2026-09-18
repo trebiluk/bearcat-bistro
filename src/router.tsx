@@ -2,7 +2,8 @@ import { createRouter } from "@tanstack/react-router";
 import { AppErrorComponent } from "@/lib/error-component";
 import { routeTree } from "./routeTree.gen";
 
-const basepath = import.meta.env.BASE_URL.replace(/\/$/, "");
+/** Production is proxied at apps.kulibert.net/bistro so Chromebooks never hit vercel.app. */
+const basepath = import.meta.env.PROD ? "/bistro" : "";
 
 export function getRouter() {
   return createRouter({
