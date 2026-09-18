@@ -146,6 +146,9 @@ function authPopupPlugin(): Plugin {
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
 export default defineConfig(({ command, isPreview }) => ({
+  // Production HTML lives at /bistro/; Nitro still emits hashed files at /assets
+  // (rewritten in vercel.json). Live preview stays at /.
+  base: process.env.VERCEL ? "/bistro/" : "/",
   server: {
     host: "0.0.0.0",
     port: 8080,

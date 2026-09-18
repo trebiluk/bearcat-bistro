@@ -5,5 +5,39 @@
       "destination": "/bistro/",
       "permanent": false
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/bistro/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/bistro/favicon.svg",
+      "destination": "/favicon.svg"
+    },
+    {
+      "source": "/bistro/og.jpg",
+      "destination": "/og.jpg"
+    },
+    {
+      "source": "/bistro/x-banner.jpg",
+      "destination": "/x-banner.jpg"
+    },
+    {
+      "source": "/bistro/menu-feed.json",
+      "destination": "/menu-feed.json"
+    },
+    {
+      "source": "/bistro/brand/:path*",
+      "destination": "/brand/:path*"
+    },
+    {
+      "source": "/bistro/flyers/:path*",
+      "destination": "/flyers/:path*"
+    },
+    {
+      "source": "/bistro/__grok/:path*",
+      "destination": "/__grok/:path*"
+    }
   ]
 }
