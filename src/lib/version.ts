@@ -3,7 +3,7 @@ import { CYCLE, FIRST_STUDENT, LAST_STUDENT, YEAR_DAYS, officialStatus } from ".
 import { BRAND } from "./brand";
 
 export const APP_NAME = BRAND.name;
-export const APP_VERSION = "2026.09.07-swift";
+export const APP_VERSION = "2026.09.23-place";
 export const APP_CHANNEL = import.meta.env.DEV ? "preview" : "live";
 
 export function storageReport() {

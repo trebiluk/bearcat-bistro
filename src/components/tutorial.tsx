@@ -131,7 +131,7 @@ export function HelpView() {
           <h2 className="font-display text-2xl">The two-minute version</h2>
           <ol className="mt-2 list-decimal space-y-1 pl-5 text-base leading-relaxed">
             <li>Pin this app in Edge. Same login every day.</li>
-            <li>Menu: pick SES / SMS / SHS, click a day, print the flyer.</li>
+            <li>Menu: pick the building on the harvest bar (Elementary, Middle, or High), click a day, print that flyer.</li>
             <li>Kitchen: tickets, stock, bags.</li>
             <li>⋯ → Choose folder on the shared drive. Save once a week.</li>
           </ol>

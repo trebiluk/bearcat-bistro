@@ -107,6 +107,89 @@ const TOGGLE_CHOICES = [
   { value: "Serve anyway", label: "Serve lunch anyway" },
 ];
 
+function lookingAt(view: View, printMonth: string) {
+  if (view === "print") {
+    const [y, m] = printMonth.split("-").map(Number);
+    if (!y || !m) return "Lunch flyer";
+    return `${new Date(y, m - 1, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" })} lunch flyer`;
+  }
+  const labels: Record<View, string> = {
+    desk: "This week's trays",
+    counts: "Morning counts",
+    stock: "Stock room",
+    line: "Kitchen tickets",
+    trips: "Field trip bags",
+    year: "All-days list",
+    learn: "Nutrition lab",
+    help: "Help",
+    log: "Kitchen log",
+    debug: "Debug desk",
+    brand: "Brand kit",
+    look: "Flyer look",
+    print: "Lunch flyer",
+  };
+  return labels[view];
+}
+
+function PlaceBar() {
+  const school = useDesk((s) => s.school);
+  const setSchool = useDesk((s) => s.setSchool);
+  const view = useDesk((s) => s.view);
+  const printMonth = useDesk((s) => s.printMonth);
+  const here = schoolOf(school);
+  const looking = lookingAt(view, printMonth);
+  return (
+    <div className="place-bar no-print shrink-0 bg-harvest text-cream">
+      <p className="sr-only" aria-live="polite">
+        Working on {here.name}, grades {here.grades}. Looking at {looking}.
+      </p>
+      <div className="flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2">
+        <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto" role="tablist" aria-label="School building">
+          {SCHOOLS.map((sc) => {
+            const on = school === sc.id;
+            const building = sc.name.replace(/^Solvay\s+/, "");
+            return (
+              <div
+                key={sc.id}
+                className={cn(
+                  "flex h-11 shrink-0 items-center gap-1 rounded-full pl-3 pr-2 md:h-12 md:min-w-[12rem] md:pl-3.5 md:pr-2",
+                  on ? "bg-cream text-navy shadow-sm" : "bg-white/15 text-cream hover:bg-white/25",
+                )}
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  aria-current={on ? "true" : undefined}
+                  aria-label={`${sc.name}, grades ${sc.grades}${on ? ", current building" : ""}`}
+                  onClick={() => setSchool(sc.id)}
+                  className="flex min-w-0 items-center gap-2"
+                >
+                  <span className="font-display text-xl leading-none tracking-wide md:text-[1.65rem]">{sc.short}</span>
+                  <span className="flex min-w-0 flex-col items-start leading-none">
+                    <span className="text-[11px] font-semibold md:text-sm">{building}</span>
+                    <span className={cn("mt-0.5 text-[10px] font-semibold", on ? "text-harvest-text" : "text-gold")}>{sc.grades}</span>
+                  </span>
+                </button>
+                <HeadcountInput
+                  id={sc.id}
+                  aria={`${sc.name} headcount`}
+                  className={cn("hidden h-7 w-10 md:inline-block", on ? "text-navy" : "text-cream")}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="hidden max-w-[17rem] shrink-0 text-right md:block">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold">Looking at</p>
+          <p className="font-display text-[1.35rem] leading-none tracking-[0.04em]">{looking}</p>
+        </div>
+      </div>
+      <p className="px-3 pb-1.5 text-sm font-semibold leading-tight md:hidden">{looking}</p>
+    </div>
+  );
+}
+
 function Select({
   value,
   onChange,
@@ -298,6 +381,11 @@ export function DeskApp() {
     [view, weekMonday, headcount, dDays, cycle, defaults, dItems, dLog, trips, school],
   );
   const tutorialOn = useDesk((s) => s.tutorialOn);
+  const printMonth = useDesk((s) => s.printMonth);
+
+  useEffect(() => {
+    document.title = `${schoolOf(school).short} · ${lookingAt(view, printMonth)} · ${BRAND.name}`;
+  }, [school, view, printMonth]);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -339,28 +427,12 @@ export function DeskApp() {
               <Apple className="size-4" /> Learn
             </Button>
           </nav>
-          <div className="ml-auto hidden min-w-0 items-center gap-1 overflow-x-auto md:flex">
-            <div className="flex gap-0.5 rounded-full bg-white/10 p-0.5">
-              {SCHOOLS.map((sc) => {
-                const on = school === sc.id;
-                return (
-                  <label key={sc.id} title={`${sc.name} · ${sc.grades}`} className={cn("flex h-8 cursor-pointer items-center rounded-full pl-2.5 pr-1", on ? "bg-cream text-navy shadow-sm" : "text-cream/80")}>
-                    <button type="button" className="text-xs font-semibold tracking-wide" onClick={() => setSchool(sc.id)}>{sc.short}</button>
-                    <HeadcountInput id={sc.id} aria={`${sc.name} headcount`} className={cn("h-6 w-11", on ? "text-navy" : "text-cream")} />
-                  </label>
-                );
-              })}
-            </div>
+          <div className="ml-auto flex items-center gap-1">
+            <HelpButton on={view === "help" || tutorialOn} />
+            <button className="flex size-11 items-center justify-center text-cream" aria-label="Backup and more" onClick={() => setMore((m) => !m)}>
+              <MoreHorizontal className="size-5" />
+            </button>
           </div>
-          <HelpButton on={view === "help" || tutorialOn} />
-          <button className="flex size-11 items-center justify-center text-cream" aria-label="Backup and more" onClick={() => setMore((m) => !m)}>
-            <MoreHorizontal className="size-5" />
-          </button>
-        </div>
-        <div className="flex gap-1 overflow-x-auto px-3 pb-2 md:hidden" aria-label="School">
-          {SCHOOLS.map((sc) => (
-            <button key={sc.id} type="button" onClick={() => setSchool(sc.id)} className={cn("h-9 shrink-0 rounded-full px-3 text-sm font-semibold", school === sc.id ? "bg-cream text-navy" : "bg-white/10 text-cream/80")}>{sc.short}</button>
-          ))}
         </div>
         {!onMenu && view !== "help" && view !== "brand" && view !== "debug" && view !== "log" && !onLearn && (
           <nav className="hidden gap-1 overflow-x-auto px-2 py-1.5 md:flex md:px-5" aria-label="Kitchen">
@@ -379,15 +451,16 @@ export function DeskApp() {
           </nav>
         )}
       </header>
+      <PlaceBar />
       {more && (
         <>
           <button type="button" className="no-print fixed inset-0 z-30 bg-navy/40 md:bg-transparent" aria-label="Close menu" onClick={() => setMore(false)} />
           <div className="no-print fixed inset-x-0 bottom-14 z-40 max-h-[75vh] overflow-auto rounded-t-2xl bg-cream p-4 text-navy shadow-[0_-16px_40px_-16px_rgba(19,36,60,0.45)] md:absolute md:right-2 md:top-14 md:bottom-auto md:w-80 md:max-h-[80vh] md:rounded-2xl md:border md:border-line">
-            <p className="text-[11px] font-semibold tracking-wide text-muted">School plates</p>
+            <p className="text-[11px] font-semibold tracking-wide text-muted">Working on {schoolOf(school).name}</p>
             <div className="mt-1 mb-3 flex flex-wrap gap-2">
               {SCHOOLS.map((sc) => (
                 <label key={sc.id} className={cn("flex h-10 items-center rounded-full pl-3 pr-1", school === sc.id ? "bg-navy text-cream" : "bg-paper")}>
-                  <button type="button" className="text-sm font-semibold" onClick={() => setSchool(sc.id)}>{sc.short}</button>
+                  <button type="button" className="text-sm font-semibold" onClick={() => setSchool(sc.id)}>{sc.short} · {sc.grades}</button>
                   <HeadcountInput id={sc.id} aria={`${sc.name} headcount`} className={cn("h-8 w-12", school === sc.id ? "text-cream" : "text-navy")} />
                 </label>
               ))}
@@ -582,7 +655,10 @@ function DeskView({ reds, shorts }: { reds: { date: string; hints: string[] }[];
       <SendMenuBanner />
       <MorningCountBanner />
       <div className="flex items-center gap-2">
-        <h1 className="font-display text-3xl leading-none">This week</h1>
+        <div className="min-w-0">
+          <p className="kicker">{schoolOf(school).short} · {schoolOf(school).grades}</p>
+          <h1 className="font-display text-3xl leading-none">This week at {schoolOf(school).name}</h1>
+        </div>
         <button className="rounded-full p-2" onClick={() => useDesk.getState().setWeekMonday(iso(addDays(parseIso(weekMonday), -7)))} aria-label="Previous week"><ChevronLeft className="size-5" /></button>
         <button className="rounded-full p-2" onClick={() => useDesk.getState().setWeekMonday(iso(addDays(parseIso(weekMonday), 7)))} aria-label="Next week"><ChevronRight className="size-5" /></button>
         <span className="text-sm text-muted">Cycle {cycleWeek(weekMonday) + 1} · {fmtShort(weekMonday)}</span>
@@ -659,7 +735,8 @@ function YearView() {
     <div className="flex h-full min-h-0 flex-col md:grid md:grid-cols-[1fr_320px]">
       <div className="min-h-0 overflow-auto">
         <div className="sticky top-0 z-10 border-b border-line bg-paper px-4 py-2">
-          <h1 className="font-display text-3xl">All days</h1>
+          <p className="kicker">{schoolOf(school).short} · {schoolOf(school).grades}</p>
+          <h1 className="font-display text-3xl">{schoolOf(school).name} · all days</h1>
           <div className="flex flex-wrap gap-1">
             {MONTHS.map((mo) => {
               const key = `${mo.y}-${String(mo.m).padStart(2, "0")}`;
@@ -972,8 +1049,9 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
             <header className="menu-mast bg-navy text-cream" onClick={() => { setPane("look"); setSheet(true); }}>
               <div className="flex flex-col gap-2 px-4 py-3 md:flex-row md:items-end md:justify-between md:px-5 md:py-4">
                 <div>
-                  <p className="kicker text-gold">{BRAND.kicker} · {schoolOf(school).short} · {schoolOf(school).grades}</p>
-                  <p className="menu-wordmark font-display text-2xl leading-none tracking-[0.04em] text-cream md:text-3xl">{BRAND.name}</p>
+                  <p className="kicker text-gold">{BRAND.kicker}</p>
+                  <p className="menu-wordmark font-display text-xl leading-none tracking-[0.04em] text-cream md:text-2xl">{BRAND.name}</p>
+                  <p className="menu-school mt-1 font-display text-[clamp(1.5rem,5.5vw,2.6rem)] leading-[0.88] tracking-[0.03em] text-gold">{schoolOf(school).name} · {schoolOf(school).grades}</p>
                   <p className="menu-month mt-1 font-display text-[clamp(2.4rem,16vw,6.2rem)] leading-[0.82]">{monthName}</p>
                 </div>
                 <div className="md:text-right">
@@ -1075,7 +1153,7 @@ function LineView() {
     return (
       <article className="rounded-2xl border border-line bg-cream p-4 print-daily">
         <p className="kicker">{role} · {selectedDate}</p>
-        <h2 className="font-display text-3xl">{schoolOf(school).short} ticket</h2>
+        <h2 className="font-display text-3xl">{schoolOf(school).name} ticket</h2>
         <ul className="mt-3 space-y-2">
           {rows.map((j) => (
             <li key={j.id} className="flex gap-2 text-sm">

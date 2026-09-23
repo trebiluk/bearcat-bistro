@@ -1,7 +1,6 @@
 import { CLOSED, FIRST_STUDENT, LAST_STUDENT, MONTHS } from "./data";
 import type { DayEdit, DurableSlice, JournalEntry } from "./backup";
 import { SCHOOLS, type SchoolId } from "./schools";
-import { APP_VERSION } from "./version";
 
 export const JOURNAL_KINDS = ["note", "snow", "chef", "calendar", "app", "print", "count"] as const;
 export type JournalKind = (typeof JOURNAL_KINDS)[number];
@@ -74,8 +73,16 @@ export const HISTORY: JournalEntry[] = [
     id: "h-app-bistro",
     date: "2026-09-06",
     kind: "app",
-    title: `Bearcat Bistro desk ${APP_VERSION}`,
+    title: "Bearcat Bistro desk 2026.09.07-swift",
     body: "Menu flyer (wide/tall), kitchen tickets, stock, bags, morning counts, family HTML, snow-day and unplanned Chef's Choice records. Three schools: SES, SMS, SHS.",
+    school: "all",
+  },
+  {
+    id: "h-place",
+    date: "2026-09-23",
+    kind: "app",
+    title: "Building bar 2026.09.23-place",
+    body: "Harvest bar names the building (SES, SMS, or SHS) and the menu on screen. Flyer mast prints the school name above the month.",
     school: "all",
   },
   {

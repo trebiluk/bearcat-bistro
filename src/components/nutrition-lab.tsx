@@ -42,7 +42,7 @@ export function NutritionLab() {
   return (
     <div className="flex h-full min-h-0 flex-col bg-paper text-ink">
       <header className="no-print shrink-0 border-b border-line bg-cream px-3 py-3 md:px-5">
-        <p className="kicker">Classroom · {schoolOf(school).short}</p>
+        <p className="kicker">Classroom · {schoolOf(school).name} · {schoolOf(school).grades}</p>
         <h1 className="font-display text-3xl leading-none tracking-[0.03em] md:text-4xl">Nutrition Lab</h1>
         <p className="mt-1 max-w-3xl text-sm text-muted">
           NY Next Generation ELA & Math (Common Core lineage), NYS Health Education 1–3, and USDA MyPlate / NSLP.
