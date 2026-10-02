@@ -18,7 +18,7 @@
   --color-gold: #fff1e6;
   --color-line: #e4dbd0;
   --color-ok: #2a7a52;
-  --color-warn: #c56a2b;
+  --color-warn: #9a4a16;
   --color-bad: #a63d4c;
   --color-ok-bg: #eaf6ef;
   --color-warn-bg: #fff4ea;
@@ -72,9 +72,10 @@
     top: 8px;
     z-index: 80;
     border-radius: 999px;
-    background: var(--color-harvest);
+    background: var(--color-navy);
     color: var(--color-cream);
     padding: 8px 14px;
+    min-height: 44px;
     font-weight: 700;
     text-decoration: none;
   }
@@ -116,6 +117,7 @@
     font-weight: 700;
     line-height: 1.25;
     color: var(--color-navy);
+    overflow-wrap: anywhere;
   }
   .menu-food-side {
     font-size: 0.8rem;
@@ -129,7 +131,7 @@
     box-shadow: var(--shadow-card);
   }
   .kicker {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -146,12 +148,8 @@
 @media screen and (max-width: 767px) {
   .menu-date { font-size: 1.05rem; }
   .menu-food-main {
-    font-size: 0.62rem;
-    line-height: 1.15;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-size: 0.75rem;
+    line-height: 1.25;
     overflow-wrap: anywhere;
   }
   .menu-food-side { display: none; }
@@ -161,10 +159,26 @@
   .menu-sheet tbody tr {
     contain-intrinsic-size: auto 4.5rem;
   }
-  .menu-dow { padding: 4px 0; font-size: 0.7rem; }
+  .menu-dow { padding: 4px 0; font-size: 0.75rem; }
 }
 
 @media screen {
+  button,
+  [role="tab"],
+  [role="switch"],
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  input:not([type="checkbox"]):not([type="radio"]) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 44px;
+    height: 44px;
+  }
   .menu-sheet tbody tr {
     content-visibility: auto;
     contain-intrinsic-size: auto 7.5rem;
@@ -202,12 +216,14 @@
   article, .menu-sheet {
     display: flex !important;
     flex-direction: column !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .orient-landscape { width: 10.56in !important; height: 8.06in !important; max-height: 8.06in !important; }
-  .orient-portrait { width: 8.06in !important; height: 10.56in !important; max-height: 10.56in !important; }
+  .orient-landscape { width: 10.56in !important; height: auto !important; max-height: none !important; }
+  .orient-portrait { width: 8.06in !important; height: auto !important; max-height: none !important; }
   .menu-mast > div { padding: 6px 10px !important; }
   .menu-school { font-size: 16pt !important; line-height: 0.9 !important; }
   .orient-landscape .menu-school { font-size: 14pt !important; }
@@ -215,25 +231,25 @@
   .orient-landscape .menu-month { font-size: 26pt !important; line-height: 0.9 !important; }
   .orient-portrait .menu-month { font-size: 32pt !important; line-height: 0.9 !important; }
   .menu-cep { padding: 4px 8px !important; font-size: 8pt !important; line-height: 1.2 !important; }
-  .menu-sheet table { flex: 1 1 0; min-height: 0; width: 100% !important; }
-  .orient-landscape .menu-sheet tbody tr { height: 17%; content-visibility: visible; }
-  .orient-portrait tbody tr { height: 15%; content-visibility: visible; }
+  .menu-sheet table { flex: none; width: 100% !important; }
+  .orient-landscape .menu-sheet tbody tr { height: auto; content-visibility: visible; }
+  .orient-portrait tbody tr { height: auto; content-visibility: visible; }
   .cv-row { content-visibility: visible; }
-  .menu-sheet td button { height: 100%; min-height: 0 !important; padding: 3px 4px !important; box-shadow: none !important; }
+  .menu-sheet td,
+  .menu-sheet td button { height: auto !important; min-height: 0 !important; overflow: visible !important; padding: 3px 4px !important; box-shadow: none !important; }
   .menu-date { font-size: 11pt; }
   .menu-food-main { font-size: 9pt; font-weight: 700; line-height: 1.15; }
   .menu-dow { padding: 4px 2px !important; font-size: 8pt !important; }
   .menu-sheet footer {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px 12px;
+    display: block !important;
     flex: none;
-    max-height: 1.55in;
-    overflow: hidden;
+    flex-shrink: 0;
+    max-height: none !important;
+    overflow: visible !important;
     padding: 6px 10px !important;
-    font-size: 6.5pt !important;
-    line-height: 1.25 !important;
+    font-size: 8pt !important;
+    line-height: 1.35 !important;
   }
-  .orient-portrait footer { max-height: 2.1in; font-size: 7.5pt !important; }
-  .menu-legal { grid-column: 1 / -1; font-size: 5pt !important; }
+  .orient-portrait footer { max-height: none !important; font-size: 8pt !important; }
+  .menu-legal { display: block !important; font-size: 8pt !important; overflow: visible !important; white-space: normal !important; text-overflow: unset !important; max-height: none !important; }
 }

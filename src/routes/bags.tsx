@@ -21,7 +21,7 @@ function TeacherBags() {
   return (
     <div className="min-h-full bg-paper text-ink">
       <header className="border-b-4 border-harvest bg-navy px-4 py-5 text-cream">
-        <p className="font-display text-xs tracking-[0.28em] text-harvest">Bearcat Bistro · Solvay UFSD</p>
+        <p className="font-display text-xs tracking-[0.28em] text-gold">Bearcat Bistro · Solvay UFSD</p>
         <h1 className="font-display text-3xl tracking-[0.08em]">Bag lunch sign-up</h1>
         <p className="mt-1 max-w-xl text-sm text-cream/85">
           Food services packs bags the school day before the trip. A name paper goes on every bag. Default sandwich is cheese.
@@ -30,7 +30,7 @@ function TeacherBags() {
       <main className="mx-auto max-w-xl p-4">
         {sent ? (
           <div className="border-2 border-navy bg-cream p-5">
-            <p className="font-display text-xs tracking-[0.2em] text-harvest">Submitted</p>
+            <p className="font-display text-xs tracking-[0.2em] text-harvest-text">Submitted</p>
             <h2 className="font-display text-3xl">You're on the list</h2>
             <p className="mt-2 text-sm leading-relaxed">{sent}</p>
             <Button className="mt-4" variant="primary" onClick={() => setSent("")}>
@@ -122,7 +122,7 @@ function TeacherBags() {
             <Button type="submit" variant="primary" className="w-full" disabled={busy}>
               {busy ? "Sending…" : "Send to food services"}
             </Button>
-            <p className="text-[11px] text-muted">Reimbursable bag: sandwich, fruit, vegetable, milk. Write PB&J only if the student should get peanut butter.</p>
+            <p className="text-xs text-muted">Reimbursable bag: sandwich, fruit, vegetable, milk. Write PB&J only if the student should get peanut butter.</p>
           </form>
         )}
       </main>

@@ -159,11 +159,11 @@ export const HELP_PAGES: { title: string; body: string[] }[] = [
 export function loadTutorial() {
   try {
     const raw = localStorage.getItem(TUTORIAL_KEY);
-    if (!raw) return { on: localStorage.getItem(TUTORIAL_SEEN) !== "1", step: 0 };
+    if (!raw) return { on: false, step: 0 };
     const o = JSON.parse(raw) as { on?: boolean; step?: number };
     return { on: !!o.on, step: Number(o.step) || 0 };
   } catch {
-    return { on: true, step: 0 };
+    return { on: false, step: 0 };
   }
 }
 

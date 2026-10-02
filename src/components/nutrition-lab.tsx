@@ -56,7 +56,7 @@ export function NutritionLab() {
               role="tab"
               aria-selected={band === b.id}
               className={cn(
-                "h-10 rounded-full px-3 text-sm font-semibold",
+                "h-11 min-h-11 rounded-full px-3 text-sm font-semibold",
                 band === b.id ? "bg-navy text-cream" : "bg-paper text-navy",
               )}
               onClick={() => {
@@ -82,8 +82,8 @@ export function NutritionLab() {
               key={id}
               type="button"
               className={cn(
-                "h-9 rounded-full px-3 text-sm font-semibold",
-                tab === id ? "bg-harvest text-cream" : "text-navy hover:bg-gold",
+                "h-11 min-h-11 rounded-full px-3 text-sm font-semibold",
+                tab === id ? "bg-navy text-cream" : "text-navy hover:bg-gold",
               )}
               onClick={() => setTab(id)}
             >
@@ -92,7 +92,7 @@ export function NutritionLab() {
           ))}
           <button
             type="button"
-            className="ml-auto flex h-9 items-center gap-1 rounded-full px-3 text-sm font-semibold text-navy hover:bg-gold"
+            className="ml-auto flex h-11 min-h-11 items-center gap-1 rounded-full px-3 text-sm font-semibold text-navy hover:bg-gold"
             onClick={() => window.print()}
           >
             <Printer className="size-4" /> Sheet
@@ -149,7 +149,7 @@ function TodayPane({
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {plate.map((p) => (
             <li key={p.name + p.group} className="rounded-2xl bg-cream p-4">
-              <p className="text-[11px] font-semibold tracking-wide text-harvest-text">{p.group}</p>
+              <p className="text-xs font-semibold tracking-wide text-harvest-text">{p.group}</p>
               <p className="font-semibold">{p.name}</p>
               <p className="text-sm text-muted">{GROUPS.find((g) => g.id === p.group)?.job}</p>
             </li>
@@ -186,7 +186,7 @@ function LessonPane({
   return (
     <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[280px_1fr]">
       <div className="rounded-2xl bg-cream p-3">
-        <p className="px-2 text-[11px] font-semibold tracking-wide text-muted">{list.length} lessons · {BANDS.find((b) => b.id === band)?.grades}</p>
+        <p className="px-2 text-xs font-semibold tracking-wide text-muted">{list.length} lessons · {BANDS.find((b) => b.id === band)?.grades}</p>
         <ul className="mt-1">
           {list.map((l) => (
             <li key={l.id}>
@@ -303,7 +303,7 @@ function TrayLab({
       {status !== "Serve" && <p className="mt-2 text-sm">No hot line today — practice with the usual sides.</p>}
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl bg-cream p-4">
-          <p className="text-[11px] font-semibold tracking-wide text-muted">Offered</p>
+          <p className="text-xs font-semibold tracking-wide text-muted">Offered</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {pool.map((p) => (
               <button
@@ -317,13 +317,13 @@ function TrayLab({
                 onClick={() => toggle(p.name)}
               >
                 {p.name}
-                <span className="ml-2 text-[10px] opacity-70">{p.group}</span>
+                <span className="ml-2 text-xs">{p.group}</span>
               </button>
             ))}
           </div>
         </div>
         <div className={cn("rounded-2xl p-4", result.ok ? "bg-ok-bg" : "bg-gold")}>
-          <p className="text-[11px] font-semibold tracking-wide">{result.ok ? "Counts" : "Not yet"}</p>
+          <p className="text-xs font-semibold tracking-wide">{result.ok ? "Counts" : "Not yet"}</p>
           <p className="mt-1 font-semibold">{result.hint}</p>
           <p className="mt-1 text-sm text-muted">{result.count} groups · fruit/veg {result.produce ? "yes" : "no"}</p>
           <MyPlate picked={chosen.map((c) => c.group)} />

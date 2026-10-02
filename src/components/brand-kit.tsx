@@ -10,7 +10,7 @@ export function BrandKitView() {
     <div className="h-full min-h-0 overflow-auto p-4">
       <div className="mx-auto max-w-3xl space-y-4 pb-16">
         <header className="rounded-2xl bg-navy px-6 py-6 text-cream">
-          <p className="text-xs font-semibold tracking-[0.28em] text-harvest">{BRAND.kicker}</p>
+          <p className="text-xs font-semibold tracking-[0.28em] text-gold">{BRAND.kicker}</p>
           <h1 className="font-display text-5xl leading-none">{BRAND.name}</h1>
           <p className="mt-1 text-cream/80">{BRAND.tagline} · kit {BRAND_LOCK}</p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -26,7 +26,7 @@ export function BrandKitView() {
           <h2 className="font-display text-2xl">Wordmark</h2>
           <div className="mt-3 flex flex-wrap items-end gap-8">
             <div className="rounded-2xl bg-navy px-5 py-4 text-cream">
-              <p className="text-[11px] font-semibold tracking-[0.22em] text-harvest">{BRAND.kicker}</p>
+              <p className="text-xs font-semibold tracking-[0.22em] text-gold">{BRAND.kicker}</p>
               <p className="font-display text-4xl leading-none">{BRAND.name}</p>
             </div>
             <p className="max-w-xs text-sm text-muted">Type is the mark. No orange letter. Favicon is navy with a harvest bar.</p>
@@ -47,7 +47,7 @@ export function BrandKitView() {
                 <span className="block h-12 rounded-lg" style={{ background: c.hex }} />
                 <span className="mt-2 block text-sm font-semibold">{c.name}</span>
                 <span className="block font-mono text-xs text-muted">{c.hex}</span>
-                <span className="mt-1 block text-[11px] leading-snug text-muted">{c.use}</span>
+                <span className="mt-1 block text-xs leading-snug text-muted">{c.use}</span>
               </button>
             ))}
           </div>

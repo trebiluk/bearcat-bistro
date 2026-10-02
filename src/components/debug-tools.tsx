@@ -80,9 +80,9 @@ export function DebugView() {
     <div className="h-full min-h-0 overflow-auto p-3 md:p-4">
       <div className="mx-auto max-w-xl space-y-3">
         <header className="rounded-2xl bg-navy px-4 py-4 text-cream">
-          <p className="text-[11px] font-semibold tracking-[0.2em] text-harvest">{BRAND.kicker}</p>
+          <p className="text-xs font-semibold tracking-[0.2em] text-gold">{BRAND.kicker}</p>
           <h1 className="font-display text-3xl leading-none">{APP_NAME}</h1>
-          <p className="mt-1 text-sm text-cream/70">
+          <p className="mt-1 text-sm text-cream">
             {APP_VERSION} · {APP_CHANNEL} · {school.toUpperCase()}
           </p>
         </header>
@@ -97,15 +97,15 @@ export function DebugView() {
           <ul className="mt-2 space-y-1 text-sm">
             {checks.map((c) => (
               <li key={c.name} className="flex items-start gap-2 py-1">
-                <span className={cn("mt-0.5 w-10 shrink-0 rounded-full text-center text-[11px] font-semibold", c.ok ? "bg-ok-bg text-ok" : "bg-bad-bg text-bad")}>
+                <span className={cn("mt-0.5 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-2 text-center text-xs font-semibold", c.ok ? "bg-ok-bg text-ok" : "bg-bad-bg text-bad")}>
                   {c.ok ? "OK" : "FAIL"}
                 </span>
                 <span className="min-w-0 flex-1 leading-snug">{c.name}</span>
-                <span className="max-w-[40%] truncate text-right text-xs text-muted">{c.detail}</span>
+                <span className="max-w-[40%] text-right text-xs text-muted">{c.detail}</span>
               </li>
             ))}
           </ul>
-          <button className="mt-2 text-sm text-harvest" onClick={() => setTick((n) => n + 1)}>
+          <button className="mt-2 inline-flex min-h-11 items-center text-sm text-harvest-text" onClick={() => setTick((n) => n + 1)}>
             Run again
           </button>
         </section>
@@ -125,7 +125,7 @@ export function DebugView() {
               ["Stock", String(items.length)],
             ].map(([k, v]) => (
               <div key={k} className="rounded-xl bg-paper px-3 py-2">
-                <dt className="text-[11px] text-muted">{k}</dt>
+                <dt className="text-xs text-muted">{k}</dt>
                 <dd className="font-semibold tabular-nums">{v}</dd>
               </div>
             ))}

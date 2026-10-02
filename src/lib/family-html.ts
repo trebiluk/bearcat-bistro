@@ -18,39 +18,40 @@ export function renderFamilyHtml(data: FamilyPayload) {
 :root{--navy:${COLORS.navy.hex};--navy2:${COLORS.navy2.hex};--harvest:${COLORS.harvest.hex};--cream:${COLORS.cream.hex};--gold:${COLORS.gold.hex};--ink:${COLORS.ink.hex};--muted:${COLORS.muted.hex};--paper:${COLORS.paper.hex};--line:${COLORS.line.hex}}
 *{box-sizing:border-box}
 html,body{margin:0;background:radial-gradient(1200px 480px at 10% -10%,#fff8f2 0%,transparent 55%),var(--paper);color:var(--ink);font-family:Barlow,Segoe UI,sans-serif}
-html[lang=ar],html[lang=fa]{font-family:"Noto Sans Arabic","Noto Naskh Arabic",Tahoma,sans-serif}
-html[lang=fa]{font-family:"Noto Naskh Arabic","Noto Sans Arabic",Tahoma,sans-serif}
+html[lang=ar],html[lang=fa],html[lang="fa-AF"]{font-family:"Noto Sans Arabic","Noto Naskh Arabic",Tahoma,sans-serif}
+html[lang=fa],html[lang="fa-AF"]{font-family:"Noto Naskh Arabic","Noto Sans Arabic",Tahoma,sans-serif}
 html[lang=ti]{font-family:"Noto Sans Ethiopic",Barlow,sans-serif}
-html[lang=uk],html[lang=ru]{font-family:"Noto Sans",Barlow,sans-serif}
+html[lang=uk],html[lang=ru],html[lang=rw]{font-family:"Noto Sans",Barlow,sans-serif}
 html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] h3,.hero h2{font-family:inherit;letter-spacing:0}
 .langs{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;background:var(--navy2);direction:ltr}
-.langs button{background:rgba(255,255,255,.08);color:var(--cream);padding:8px 12px;border-radius:999px;font-size:15px;font-weight:700;min-height:40px}
-.langs button.on{background:var(--harvest);color:var(--cream)}
+.langs button{background:rgba(255,255,255,.08);color:var(--cream);padding:8px 12px;border-radius:999px;font-size:15px;font-weight:700;min-height:44px}
+.langs button.on{background:var(--cream);color:var(--navy)}
 .calwrap,.week,table.cal{direction:ltr}
 h1,h2,h3{font-family:"Bebas Neue",Arial Narrow,Impact,sans-serif;letter-spacing:.03em;font-weight:400}
 button{cursor:pointer;border:0;font-family:inherit}
 .wrap{max-width:1100px;margin:0 auto;padding:16px}
 header.top{background:var(--navy);color:var(--cream);box-shadow:inset 0 -3px 0 var(--harvest)}
+header.top .kicker{color:var(--gold)}
 header.top .wrap{display:flex;flex-wrap:nowrap;gap:8px;align-items:center;justify-content:space-between;padding-top:10px;padding-bottom:10px}
-.kicker{color:var(--harvest);letter-spacing:.22em;font-size:10px;margin:0;font-weight:600}
+.kicker{color:#b84420;letter-spacing:.16em;font-size:12px;margin:0;font-weight:600}
 .brand{font-family:"Bebas Neue",sans-serif;font-size:28px;line-height:.85;margin:2px 0 0}
-.schools{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:3px;border-radius:999px;flex-shrink:0}
-.schools button{background:transparent;color:rgba(251,247,242,.75);padding:8px 12px;border-radius:999px;font-size:13px;font-weight:600}
+.schools{display:flex;flex-wrap:wrap;gap:4px;background:rgba(255,255,255,.1);padding:3px;border-radius:999px}
+.schools button{background:transparent;color:var(--cream);padding:8px 12px;border-radius:999px;font-size:13px;font-weight:600;min-height:44px}
 .schools button.on{background:var(--cream);color:var(--navy)}
-.cep{margin:0;padding:8px 16px;background:var(--harvest);color:var(--cream);font-size:16px;font-weight:700}
+.cep{margin:0;padding:8px 16px;background:var(--navy);color:var(--cream);font-size:16px;font-weight:700;box-shadow:inset 0 -3px 0 var(--harvest)}
 .hero{background:var(--navy);color:var(--cream);margin:0 0 12px;padding:16px 18px;border-radius:16px;box-shadow:inset 3px 0 0 var(--harvest),0 10px 28px -18px rgba(19,36,60,.28)}
-.hero .when{color:var(--harvest);font-size:12px;font-weight:600;letter-spacing:.08em;margin:0}
+.hero .when{color:var(--gold);font-size:12px;font-weight:600;letter-spacing:.08em;margin:0}
 .hero h2{font-size:clamp(32px,8vw,56px);line-height:.9;margin:6px 0}
-.hero p{margin:6px 0 0;font-size:15px;color:rgba(251,247,242,.85)}
+.hero p{margin:6px 0 0;font-size:15px;color:var(--cream)}
 .tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.tools input{flex:1;min-width:180px;height:42px;padding:0 14px;border:0;border-radius:999px;border-left:3px solid var(--harvest);background:var(--gold);font:inherit;font-size:15px}
-.btn{height:42px;padding:0 16px;border-radius:999px;background:var(--cream);color:var(--navy);font-size:14px;font-weight:600;box-shadow:0 1px 2px rgba(19,36,60,.04)}
-.btn.primary{background:var(--harvest);color:var(--cream)}
+.tools input{flex:1;min-width:180px;height:44px;min-height:44px;padding:0 14px;border:0;border-radius:999px;border-left:3px solid var(--harvest);background:var(--gold);font:inherit;font-size:16px;color:var(--ink)}
+.btn{height:44px;min-height:44px;padding:0 16px;border-radius:999px;background:var(--cream);color:var(--navy);font-size:14px;font-weight:600;box-shadow:0 1px 2px rgba(19,36,60,.04)}
+.btn.primary{background:var(--navy);color:var(--cream)}
 details.toolsbox{margin:14px 0 8px;background:var(--cream);border-radius:12px;padding:4px 12px}
 details.toolsbox summary{font-size:14px;font-weight:600;padding:10px 0;cursor:pointer;list-style:none}
 details.toolsbox summary::-webkit-details-marker{display:none}
 .months{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
-.months button{padding:7px 12px;border-radius:999px;background:var(--cream);color:var(--muted);font-size:13px;font-weight:600}
+.months button{padding:7px 12px;border-radius:999px;background:var(--cream);color:var(--navy);font-size:13px;font-weight:600;min-height:44px}
 .months button.on{background:var(--navy);color:var(--cream)}
 .honor{font-size:13px;color:var(--muted);margin:0 0 8px}
 .week{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
@@ -58,14 +59,14 @@ details.toolsbox summary::-webkit-details-marker{display:none}
 .card{background:var(--cream);border-left:3px solid var(--harvest);border-radius:12px;padding:12px;min-height:88px;text-align:left;box-shadow:0 1px 2px rgba(19,36,60,.04)}
 .card.today{background:var(--navy);color:var(--cream)}
 .card.closed{background:var(--cream);color:var(--muted);border-color:var(--line)}
-.card .d{font-size:12px;font-weight:600;color:var(--harvest)}
+.card .d{font-size:12px;font-weight:600;color:#b84420}
 .card .e{font-family:"Bebas Neue",sans-serif;font-size:22px;line-height:1.05;margin-top:4px}
-.card .holy{font-size:11px;color:var(--muted);margin-top:4px;font-weight:500}
+.card .holy{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
 .calwrap{overflow:auto;border-radius:16px;background:var(--cream);box-shadow:0 1px 2px rgba(19,36,60,.04);-webkit-overflow-scrolling:touch}
 table.cal{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;background:var(--cream)}
-table.cal th{background:var(--harvest);color:var(--cream);padding:10px 4px;font-size:12px;font-weight:600;letter-spacing:.04em;position:sticky;top:0;z-index:2}
-table.cal th.wk{background:var(--navy2);color:rgba(251,247,242,.8)}
-table.cal td{border-top:1px solid var(--line);border-left:1px solid var(--line);vertical-align:top;height:96px;padding:6px;width:14.28%;overflow:hidden}
+table.cal th{background:var(--navy);color:var(--cream);padding:10px 4px;font-size:12px;font-weight:600;letter-spacing:.04em;position:sticky;top:0;z-index:2}
+table.cal th.wk{background:var(--navy2);color:var(--cream)}
+table.cal td{border-top:1px solid var(--line);border-left:1px solid var(--line);vertical-align:top;min-height:96px;height:auto;padding:6px;width:14.28%;overflow:visible}
 .dshort{display:none}
 table.cal tr td:first-child{border-left:0}
 table.cal td.out{background:#f6f1ea;color:#b5aea6}
@@ -74,8 +75,8 @@ table.cal td.today{box-shadow:inset 0 0 0 2px var(--harvest)}
 table.cal td.holy{background:var(--gold)}
 table.cal td button{all:unset;display:block;width:100%;height:100%;cursor:pointer;font-family:Barlow,sans-serif}
 .num{font-family:"Bebas Neue",sans-serif;font-size:20px;color:var(--navy)}
-.food{font-weight:700;font-size:13px;line-height:1.25;margin-top:4px}
-.holy{font-size:11px;color:var(--muted);font-weight:500;margin-top:3px}
+.food{font-weight:700;font-size:13px;line-height:1.25;margin-top:4px;overflow-wrap:anywhere}
+.holy{font-size:12px;color:var(--muted);font-weight:500;margin-top:3px}
 .side{font-size:13px;color:var(--muted);line-height:1.45}
 .breakfast{background:var(--gold);border-radius:12px;padding:12px 14px;color:var(--navy);font-size:13px;line-height:1.4;margin:12px 0}
 .lab{background:var(--cream);border-radius:16px;padding:14px 16px;margin:12px 0}
@@ -84,12 +85,12 @@ table.cal td button{all:unset;display:block;width:100%;height:100%;cursor:pointe
 .holidays{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
 .holidays span{font-size:12px;color:var(--muted);background:var(--cream);border-radius:999px;padding:4px 10px}
 .drawer{position:fixed;inset:auto 16px 16px 16px;background:var(--cream);color:var(--ink);padding:18px;border-radius:16px;box-shadow:0 18px 40px -20px rgba(19,36,60,.45);z-index:20;max-width:720px;margin:0 auto}
-.drawer .kicker{color:var(--harvest)}
+.drawer .kicker{color:#b84420}
 .drawer h3{font-size:28px;margin:4px 0}
 .hits{background:var(--cream);border-radius:12px;padding:12px;margin:12px 0}
 .hits button{display:block;width:100%;text-align:left;padding:8px;background:transparent;font-size:15px;border-bottom:1px solid var(--line)}
 .skip{position:absolute;left:-999px;top:8px}
-.skip:focus{left:8px;z-index:50;background:var(--harvest);color:var(--cream);padding:8px 14px;border-radius:999px;text-decoration:none;font-weight:700}
+.skip:focus{left:8px;z-index:50;background:var(--navy);color:var(--cream);padding:8px 14px;border-radius:999px;text-decoration:none;font-weight:700;min-height:44px}
 button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--harvest);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 .nds-full{font-size:12px;line-height:1.5;color:var(--navy);margin-top:12px}
@@ -106,11 +107,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{o
   .card{flex:0 0 72%;min-width:72%;scroll-snap-align:start;min-height:72px}
   .dlong{display:none}
   .dshort{display:inline}
-  table.cal th{font-size:10px;padding:8px 1px;letter-spacing:0}
-  table.cal td{height:78px;padding:4px 3px}
+  table.cal th{font-size:12px;padding:8px 1px;letter-spacing:0}
+  table.cal td{min-height:72px;height:auto;padding:4px 3px}
   .num{font-size:16px}
-  .food{font-size:11px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .holy{font-size:10px}
+  .food{font-size:12px;line-height:1.25;display:block;overflow:visible}
+  .holy{font-size:12px}
   .drawer{inset:auto 10px 12px 10px;padding:16px}
   #monthTitle{font-size:28px;margin:8px 0 4px}
 }
@@ -177,8 +178,38 @@ const store = {
   school: localStorage.getItem("bb-school") || DATA.schools[1].id,
   month: defaultMonth(),
   q: "",
-  lang: localStorage.getItem("bb-lang") || "en"
+  lang: pickLang()
 };
+function classicHub(){
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get("hub") === "classic" || q.get("theme") === "classic") return true;
+    if (localStorage.getItem("tech-room-hub") === "classic") return true;
+  } catch (e) {}
+  return false;
+}
+function hubLang(){
+  if (classicHub()) return "";
+  try {
+    const q = new URLSearchParams(location.search).get("lang");
+    if (q) return q;
+    const hash = (location.hash || "").match(/(?:^#|&)kp=([^&]+)/);
+    if (hash) {
+      const parts = decodeURIComponent(hash[1]).split(".");
+      if (parts.length >= 7 && parts[6]) return parts[6];
+    }
+    const raw = JSON.parse(localStorage.getItem("kulibert-prefs-v1") || "null");
+    if (raw && raw.lang) return raw.lang;
+  } catch (e) {}
+  return "";
+}
+function pickLang(){
+  const map = { simple:"en", en:"en", uk:"uk", ru:"ru", es:"es", ar:"ar", "fa-AF":"fa-AF", fa:"fa", rw:"rw", ti:"ti", "es-CU":"es-CU" };
+  const fromHub = map[hubLang()] || "";
+  const saved = localStorage.getItem("bb-lang") || "";
+  const id = fromHub || saved || "en";
+  return (I18 && I18.locales && I18.locales.some(x => x.id === id)) ? id : "en";
+}
 function defaultMonth(){
   const t = DATA.today.slice(0,7);
   if (DATA.months.some(m => m.key === t)) return t;
@@ -411,6 +442,19 @@ document.body.addEventListener("click", e => {
   if (t.dataset.go){ openDay(t.dataset.go); return; }
 });
 document.getElementById("q").addEventListener("input", e => { store.q = e.target.value; paintHits(); });
+function applyHub(lang){
+  if (classicHub()) return;
+  const map = { simple:"en", en:"en", uk:"uk", ru:"ru", es:"es", ar:"ar", "fa-AF":"fa-AF", fa:"fa", rw:"rw", ti:"ti", "es-CU":"es-CU" };
+  const id = map[lang] || "";
+  if (!id || !I18.locales.some(x => x.id === id)) return;
+  store.lang = id;
+  paint();
+}
+window.addEventListener("message", (e) => {
+  const d = e.data;
+  if (d && d.type === "kp-lang") applyHub(d.lang);
+});
+window.addEventListener("kulibert-lang", () => applyHub(hubLang()));
 paint();
 </script>
 </body>

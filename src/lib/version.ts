@@ -3,7 +3,9 @@ import { CYCLE, FIRST_STUDENT, LAST_STUDENT, YEAR_DAYS, officialStatus } from ".
 import { BRAND } from "./brand";
 
 export const APP_NAME = BRAND.name;
-export const APP_VERSION = "2026.09.23-place";
+export const APP_VERSION = "2026.10.03-polish";
+export const APP_PLATE = "v2026.10.03";
+export const WHATS_NEW = "Bigger buttons, darker text, and dish names no longer get cut off.";
 export const APP_CHANNEL = import.meta.env.DEV ? "preview" : "live";
 
 export function storageReport() {

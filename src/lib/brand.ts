@@ -22,7 +22,7 @@ export const COLORS = {
   muted: { hex: "#4F5E72", name: "Slate", use: "Helper type — WCAG AA on cream" },
   line: { hex: "#E4DBD0", name: "Warm Line", use: "Hairline borders" },
   ok: { hex: "#2A7A52", name: "Kitchen Green", use: "In stock" },
-  warn: { hex: "#C56A2B", name: "Order Amber", use: "Reorder" },
+  warn: { hex: "#9A4A16", name: "Order Amber", use: "Reorder" },
   bad: { hex: "#A63D4C", name: "Flag Rose", use: "Out / errors — never shout red" },
 } as const;
 

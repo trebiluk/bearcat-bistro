@@ -60,9 +60,9 @@ export function LogView() {
     <div className="h-full min-h-0 overflow-auto p-3 md:p-4">
       <div className="mx-auto max-w-2xl space-y-4 pb-16">
         <header className="rounded-2xl bg-navy px-4 py-4 text-cream">
-          <p className="text-[11px] font-semibold tracking-[0.2em] text-harvest">Kitchen record</p>
+          <p className="text-xs font-semibold tracking-[0.2em] text-gold">Kitchen record</p>
           <h1 className="font-display text-4xl leading-none">Change log</h1>
-          <p className="mt-2 text-sm text-cream/75">
+          <p className="mt-2 text-sm text-cream">
             Dated notes going forward. Snow days, unplanned Chef’s Choice, and flyer-sent dates land here automatically. District holidays are already listed.
           </p>
         </header>
@@ -103,7 +103,7 @@ export function LogView() {
               type="button"
               onClick={() => setFilter(f.id)}
               className={cn(
-                "h-9 shrink-0 rounded-full px-3 text-sm font-semibold",
+                "h-11 min-h-11 shrink-0 rounded-full px-3 text-sm font-semibold",
                 filter === f.id ? "bg-navy text-cream" : "bg-cream text-muted",
               )}
             >
@@ -116,7 +116,7 @@ export function LogView() {
           {shown.map((e) => (
             <li key={e.id} className="sheet p-3">
               <div className="flex items-baseline justify-between gap-2">
-                <p className="text-[11px] font-semibold tracking-wide text-harvest">
+                <p className="text-xs font-semibold tracking-wide text-harvest-text">
                   {fmtShort(e.date)} · {kindLabel(e.kind)}
                   {e.school && e.school !== "all" ? ` · ${e.school.toUpperCase()}` : ""}
                 </p>
@@ -129,7 +129,7 @@ export function LogView() {
               <h3 className="font-display text-xl leading-none">{e.title}</h3>
               {e.body && <p className="mt-1 text-sm text-ink">{e.body}</p>}
               {(e.kind === "snow" || e.kind === "chef" || e.kind === "note") && e.date && (
-                <button type="button" className="mt-2 text-sm text-harvest" onClick={() => go("print", { date: e.date })}>
+                <button type="button" className="mt-2 inline-flex min-h-11 items-center text-sm text-harvest-text" onClick={() => go("print", { date: e.date })}>
                   Open that day →
                 </button>
               )}

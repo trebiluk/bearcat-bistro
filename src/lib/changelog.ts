@@ -86,6 +86,14 @@ export const HISTORY: JournalEntry[] = [
     school: "all",
   },
   {
+    id: "h-polish",
+    date: "2026-10-03",
+    kind: "app",
+    title: "Readability 2026.10.03-polish",
+    body: "Bigger buttons, darker text, and dish names no longer get cut off. Phone Menu opens from the top left. Flyer adds Dari and Kinyarwanda and follows the Tech Room language.",
+    school: "all",
+  },
+  {
     id: "h-family",
     date: "2026-09-06",
     kind: "app",

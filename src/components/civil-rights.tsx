@@ -5,13 +5,13 @@ import { AD3027, LEGAL_SHORT, ndsHtml, NDS_EMAIL, NDS_PHONE } from "@/lib/legal"
 
 export function SiteLegalBar() {
   return (
-    <p className="no-print truncate text-[11px] leading-snug text-muted">
+    <p className="no-print text-xs leading-snug text-muted">
       Lunch is free. {LEGAL_SHORT}{" "}
-      <Link to="/rights" className="font-semibold text-harvest-text underline">
+      <Link to="/rights" className="inline-flex min-h-11 items-center font-semibold text-harvest-text underline">
         Full USDA statement
       </Link>
       {" · "}
-      <Link to="/family" className="font-semibold text-harvest-text underline">
+      <Link to="/family" className="inline-flex min-h-11 items-center font-semibold text-harvest-text underline">
         Family menu
       </Link>
     </p>

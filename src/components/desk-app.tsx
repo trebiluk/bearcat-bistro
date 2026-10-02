@@ -7,6 +7,7 @@ import {
   ClipboardList,
   FileDown,
   ListChecks,
+  Menu,
   MoreHorizontal,
   Phone,
   Printer,
@@ -70,7 +71,7 @@ import {
   rememberedFolderName,
 } from "@/lib/folder";
 import { MENU_PAGE, SCHOOLS, schoolOf, type SchoolId } from "@/lib/schools";
-import { APP_VERSION, versionLabel } from "@/lib/version";
+import { APP_PLATE, APP_VERSION, WHATS_NEW, versionLabel } from "@/lib/version";
 import { mergeInbox, patchInbox } from "@/lib/inbox";
 import { listSignups, setSignupStatus, type BagSignup } from "@/lib/signups";
 import { addDays, cn, fmtShort, iso, packDateOf, parseIso, parseRoster, sundayOf } from "@/lib/utils";
@@ -139,12 +140,12 @@ function PlaceBar() {
   const here = schoolOf(school);
   const looking = lookingAt(view, printMonth);
   return (
-    <div className="place-bar no-print shrink-0 bg-harvest text-cream">
+    <div className="place-bar no-print shrink-0 border-b border-line bg-navy text-cream">
       <p className="sr-only" aria-live="polite">
         Working on {here.name}, grades {here.grades}. Looking at {looking}.
       </p>
       <div className="flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2">
-        <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto" role="tablist" aria-label="School building">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1" role="tablist" aria-label="School building">
           {SCHOOLS.map((sc) => {
             const on = school === sc.id;
             const building = sc.name.replace(/^Solvay\s+/, "");
@@ -163,29 +164,31 @@ function PlaceBar() {
                   aria-current={on ? "true" : undefined}
                   aria-label={`${sc.name}, grades ${sc.grades}${on ? ", current building" : ""}`}
                   onClick={() => setSchool(sc.id)}
-                  className="flex min-w-0 items-center gap-2"
+                  className="flex min-h-11 min-w-0 items-center gap-2"
                 >
                   <span className="font-display text-xl leading-none tracking-wide md:text-[1.65rem]">{sc.short}</span>
                   <span className="flex min-w-0 flex-col items-start leading-none">
-                    <span className="text-[11px] font-semibold md:text-sm">{building}</span>
-                    <span className={cn("mt-0.5 text-[10px] font-semibold", on ? "text-harvest-text" : "text-gold")}>{sc.grades}</span>
+                    <span className="text-xs font-semibold md:text-sm">{building}</span>
+                    <span className={cn("mt-0.5 text-xs font-semibold", on ? "text-harvest-text" : "text-gold")}>{sc.grades}</span>
                   </span>
                 </button>
                 <HeadcountInput
                   id={sc.id}
                   aria={`${sc.name} headcount`}
-                  className={cn("hidden h-7 w-10 md:inline-block", on ? "text-navy" : "text-cream")}
+                  className={cn("hidden h-11 w-11 md:inline-block", on ? "text-navy" : "text-cream")}
                 />
               </div>
             );
           })}
         </div>
         <div className="hidden max-w-[17rem] shrink-0 text-right md:block">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold">Looking at</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">Looking at</p>
           <p className="font-display text-[1.35rem] leading-none tracking-[0.04em]">{looking}</p>
+          <p className="mt-1 text-xs font-semibold text-gold">{APP_PLATE}</p>
         </div>
       </div>
-      <p className="px-3 pb-1.5 text-sm font-semibold leading-tight md:hidden">{looking}</p>
+      <p className="px-3 pb-1 text-sm font-semibold leading-tight md:hidden">{looking}</p>
+      <p className="px-3 pb-1.5 text-xs font-semibold text-gold md:hidden">{APP_PLATE} · {APP_VERSION}</p>
     </div>
   );
 }
@@ -207,7 +210,7 @@ function Select({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={cn("field h-10 w-full min-w-0 px-2 text-sm", className)}
+      className={cn("field h-11 w-full min-w-0 px-2 text-sm", className)}
     >
       {blank && <option value="">{blank}</option>}
       {value && !options.includes(value) && <option value={value}>{value}</option>}
@@ -236,7 +239,7 @@ function Switch({
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={cn(
-        "flex h-10 w-fit shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold",
+        "flex h-11 min-h-11 w-fit shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold",
         checked ? "bg-navy text-cream" : "bg-paper text-navy",
       )}
     >
@@ -365,6 +368,8 @@ export function DeskApp() {
   const headcounts = useDesk((s) => s.headcounts);
   const headcount = headcounts[school];
   const [more, setMore] = useState(false);
+  const [drawer, setDrawer] = useState(false);
+  const [news, setNews] = useState(false);
 
   const dDays = useDeferredValue(days);
   const dLog = useDeferredValue(log);
@@ -386,6 +391,56 @@ export function DeskApp() {
   useEffect(() => {
     document.title = `${schoolOf(school).short} · ${lookingAt(view, printMonth)} · ${BRAND.name}`;
   }, [school, view, printMonth]);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("bb-whats-new") !== "2026.10.03") setNews(true);
+    } catch {
+      setNews(true);
+    }
+    const classic = () => {
+      const q = new URLSearchParams(window.location.search);
+      if (q.get("hub") === "classic" || q.get("theme") === "classic") return true;
+      try {
+        return localStorage.getItem("tech-room-hub") === "classic";
+      } catch {
+        return false;
+      }
+    };
+    const applyHub = (lang: string | null) => {
+      if (classic() || !lang) {
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+        return;
+      }
+      const rtl = lang === "ar" || lang === "fa-AF" || lang === "fa";
+      document.documentElement.lang = lang === "simple" ? "en" : lang;
+      document.documentElement.dir = rtl ? "rtl" : "ltr";
+    };
+    const readHub = () => {
+      if (classic()) return null;
+      const q = new URLSearchParams(window.location.search).get("lang");
+      if (q) return q;
+      try {
+        const raw = JSON.parse(localStorage.getItem("kulibert-prefs-v1") || "null") as { lang?: string } | null;
+        return raw?.lang || null;
+      } catch {
+        return null;
+      }
+    };
+    applyHub(readHub());
+    const onMsg = (e: MessageEvent) => {
+      const data = e.data as { type?: string; lang?: string } | null;
+      if (data?.type === "kp-lang") applyHub(data.lang || null);
+    };
+    const onHub = () => applyHub(readHub());
+    window.addEventListener("message", onMsg);
+    window.addEventListener("kulibert-lang", onHub);
+    return () => {
+      window.removeEventListener("message", onMsg);
+      window.removeEventListener("kulibert-lang", onHub);
+    };
+  }, []);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -411,10 +466,20 @@ export function DeskApp() {
     <div className="relative flex h-dvh min-h-0 flex-col bg-paper text-ink">
       <a href="#main" className="skip-link no-print">Skip to menu</a>
       <header className="app-bar no-print shrink-0 bg-navy text-cream">
-        <div className="flex h-12 items-center gap-2 px-3 md:h-14 md:gap-3 md:px-5">
+        <div className="flex min-h-14 flex-wrap items-center gap-2 px-3 md:gap-3 md:px-5">
+          <button
+            type="button"
+            className="inline-flex h-11 min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-cream md:hidden"
+            aria-label="Menu"
+            aria-expanded={drawer}
+            onClick={() => setDrawer((v) => !v)}
+          >
+            <Menu className="size-5" />
+            Menu
+          </button>
           <div className="min-w-0 leading-none">
-            <p className="hidden text-[10px] font-semibold tracking-[0.22em] text-gold md:block">{BRAND.kicker}</p>
-            <p className="truncate font-display text-xl leading-none tracking-[0.04em] md:text-[1.85rem]">{BRAND.name}</p>
+            <p className="hidden text-xs font-semibold tracking-[0.22em] text-gold md:block">{BRAND.kicker}</p>
+            <p className="font-display text-lg leading-none tracking-[0.04em] md:text-[1.85rem]">{BRAND.name}</p>
           </div>
           <nav className="ml-3 hidden gap-1 md:flex" aria-label="Main">
             <Button variant="nav" aria-current={onMenu ? "page" : undefined} className={cn("rounded-full px-4", onMenu && "bg-cream/15 text-cream")} onClick={() => go("print")}>
@@ -429,8 +494,9 @@ export function DeskApp() {
           </nav>
           <div className="ml-auto flex items-center gap-1">
             <HelpButton on={view === "help" || tutorialOn} />
-            <button className="flex size-11 items-center justify-center text-cream" aria-label="Backup and more" onClick={() => setMore((m) => !m)}>
+            <button className="inline-flex h-11 min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-cream" aria-label="Backup and more" onClick={() => setMore((m) => !m)}>
               <MoreHorizontal className="size-5" />
+              More
             </button>
           </div>
         </div>
@@ -440,28 +506,70 @@ export function DeskApp() {
               const Icon = n.icon;
               const on = view === n.id;
               return (
-                <button key={n.id} onClick={() => go(n.id)} className={cn("flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 font-sans text-sm font-semibold", on ? "bg-cream/15 text-cream" : "text-cream/70 hover:text-cream")}>
+                <button key={n.id} onClick={() => go(n.id)} className={cn("flex h-11 min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 font-sans text-sm font-semibold", on ? "bg-cream/15 text-cream" : "text-cream hover:text-cream")}>
                   <Icon className="size-3.5" strokeWidth={1.75} />{n.label}
                 </button>
               );
             })}
-            <button onClick={() => go("print", { date: reds[0]?.date })} className="ml-auto flex h-8 shrink-0 items-center rounded-full px-3 text-sm text-gold">
+            <button onClick={() => go("print", { date: reds[0]?.date })} className="ml-auto flex h-11 min-h-11 shrink-0 items-center rounded-full px-3 text-sm text-gold">
               {reds.length ? `${reds.length} to fix on menu` : "Menu looks clean"}
             </button>
           </nav>
         )}
       </header>
+      {news && (
+        <div className="no-print flex flex-wrap items-center gap-2 border-b border-line bg-gold px-3 py-2 text-sm text-navy">
+          <p className="min-w-0 flex-1 font-semibold">{WHATS_NEW}</p>
+          <button
+            type="button"
+            className="inline-flex h-11 min-h-11 items-center rounded-full bg-navy px-3 text-sm font-semibold text-cream"
+            onClick={() => {
+              try { localStorage.setItem("bb-whats-new", "2026.10.03"); } catch { /* */ }
+              setNews(false);
+            }}
+          >
+            Got it
+          </button>
+        </div>
+      )}
+      {drawer && (
+        <>
+          <button type="button" className="no-print fixed inset-0 z-30 bg-navy/40 md:hidden" aria-label="Close menu" onClick={() => setDrawer(false)} />
+          <nav className="no-print fixed inset-y-0 left-0 z-40 flex w-72 flex-col gap-1 overflow-auto bg-cream p-3 text-navy shadow-card md:hidden" aria-label="Menu">
+            <p className="px-2 text-xs font-semibold text-muted">Menu</p>
+            {([
+              ["print", "Menu"],
+              ["desk", "Today"],
+              ["counts", "Counts"],
+              ["stock", "Stock"],
+              ["line", "Tickets"],
+              ["trips", "Bags"],
+              ["learn", "Learn"],
+              ["help", "Help"],
+            ] as [View, string][]).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                className="flex h-11 min-h-11 items-center rounded-full px-3 text-left text-sm font-semibold hover:bg-gold"
+                onClick={() => { setDrawer(false); go(id); }}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+        </>
+      )}
       <PlaceBar />
       {more && (
         <>
           <button type="button" className="no-print fixed inset-0 z-30 bg-navy/40 md:bg-transparent" aria-label="Close menu" onClick={() => setMore(false)} />
           <div className="no-print fixed inset-x-0 bottom-14 z-40 max-h-[75vh] overflow-auto rounded-t-2xl bg-cream p-4 text-navy shadow-[0_-16px_40px_-16px_rgba(19,36,60,0.45)] md:absolute md:right-2 md:top-14 md:bottom-auto md:w-80 md:max-h-[80vh] md:rounded-2xl md:border md:border-line">
-            <p className="text-[11px] font-semibold tracking-wide text-muted">Working on {schoolOf(school).name}</p>
+            <p className="text-xs font-semibold tracking-wide text-muted">Working on {schoolOf(school).name}</p>
             <div className="mt-1 mb-3 flex flex-wrap gap-2">
               {SCHOOLS.map((sc) => (
-                <label key={sc.id} className={cn("flex h-10 items-center rounded-full pl-3 pr-1", school === sc.id ? "bg-navy text-cream" : "bg-paper")}>
-                  <button type="button" className="text-sm font-semibold" onClick={() => setSchool(sc.id)}>{sc.short} · {sc.grades}</button>
-                  <HeadcountInput id={sc.id} aria={`${sc.name} headcount`} className={cn("h-8 w-12", school === sc.id ? "text-cream" : "text-navy")} />
+                <label key={sc.id} className={cn("flex min-h-11 items-center rounded-full pl-3 pr-1", school === sc.id ? "bg-navy text-cream" : "bg-paper")}>
+                  <button type="button" className="min-h-11 text-sm font-semibold" onClick={() => setSchool(sc.id)}>{sc.short} · {sc.grades}</button>
+                  <HeadcountInput id={sc.id} aria={`${sc.name} headcount`} className={cn("h-11 w-12 min-w-11", school === sc.id ? "text-cream" : "text-navy")} />
                 </label>
               ))}
             </div>
@@ -484,7 +592,7 @@ export function DeskApp() {
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-center text-[10px] text-muted">{versionLabel()}</p>
+            <p className="mt-3 text-center text-xs text-muted">{versionLabel()}</p>
             <div className="mt-2"><SiteLegalBar /></div>
           </div>
         </>
@@ -519,26 +627,26 @@ export function DeskApp() {
         </div>
       </main>
       <TourDock />
-      <footer className="no-print hidden h-auto shrink-0 items-center justify-between gap-3 border-t border-line bg-cream px-4 py-2 text-xs text-muted md:flex">
+      <footer className="no-print hidden h-auto shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-cream px-4 py-2 text-xs text-muted md:flex">
         <SiteLegalBar />
-        <span className="truncate">{CONTACT}</span>
-        <button className="tabular-nums text-muted/70" onClick={() => go("debug")}>v{APP_VERSION}</button>
+        <span>{CONTACT}</span>
+        <span className="text-xs font-semibold text-navy">{APP_VERSION}</span>
+        <button className="inline-flex h-11 min-h-11 items-center tabular-nums text-muted" onClick={() => go("debug")}>{APP_PLATE}</button>
         <BackupBar />
       </footer>
       <nav className="no-print flex h-14 shrink-0 border-t border-line bg-cream pb-[env(safe-area-inset-bottom)] md:hidden">
         {([
-          { id: "print" as View, label: "Menu", icon: UtensilsCrossed, on: onMenu },
           { id: "desk" as View, label: "Today", icon: Sun, on: view === "desk" },
           { id: "learn" as View, label: "Learn", icon: Apple, on: onLearn },
         ] as const).map((t) => {
           const Icon = t.icon;
           return (
-            <button key={t.id} onClick={() => { setMore(false); go(t.id); }} className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold", t.on ? "text-harvest" : "text-muted")}>
+            <button key={t.id} onClick={() => { setMore(false); go(t.id); }} className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold", t.on ? "text-harvest-text" : "text-navy")}>
               <Icon className="size-5" strokeWidth={t.on ? 2.2 : 1.75} />{t.label}
             </button>
           );
         })}
-        <button onClick={() => setMore((m) => !m)} className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold", more ? "text-harvest" : "text-muted")}>
+        <button onClick={() => setMore((m) => !m)} className={cn("flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold", more ? "text-harvest-text" : "text-navy")}>
           <MoreHorizontal className="size-5" /> More
         </button>
       </nav>
@@ -659,8 +767,8 @@ function DeskView({ reds, shorts }: { reds: { date: string; hints: string[] }[];
           <p className="kicker">{schoolOf(school).short} · {schoolOf(school).grades}</p>
           <h1 className="font-display text-3xl leading-none">This week at {schoolOf(school).name}</h1>
         </div>
-        <button className="rounded-full p-2" onClick={() => useDesk.getState().setWeekMonday(iso(addDays(parseIso(weekMonday), -7)))} aria-label="Previous week"><ChevronLeft className="size-5" /></button>
-        <button className="rounded-full p-2" onClick={() => useDesk.getState().setWeekMonday(iso(addDays(parseIso(weekMonday), 7)))} aria-label="Next week"><ChevronRight className="size-5" /></button>
+        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full" onClick={() => useDesk.getState().setWeekMonday(iso(addDays(parseIso(weekMonday), -7)))} aria-label="Previous week"><ChevronLeft className="size-5" /></button>
+        <button className="inline-flex h-11 w-11 items-center justify-center rounded-full" onClick={() => useDesk.getState().setWeekMonday(iso(addDays(parseIso(weekMonday), 7)))} aria-label="Next week"><ChevronRight className="size-5" /></button>
         <span className="text-sm text-muted">Cycle {cycleWeek(weekMonday) + 1} · {fmtShort(weekMonday)}</span>
       </div>
       <div className="grid gap-2 sm:grid-cols-5">
@@ -711,7 +819,7 @@ function CountsView() {
         {opts.map((name) => (
           <label key={name} className="flex items-center justify-between rounded-2xl bg-cream px-3 py-2">
             <span className="text-sm font-semibold">{name}</span>
-            <input type="number" min={0} className="field h-10 w-20 text-center" value={sheet?.rows[name] ?? ""} onChange={(e) => setCount(selectedDate, school, name, Number(e.target.value) || 0)} />
+            <input type="number" min={0} className="field h-11 w-20 text-center" value={sheet?.rows[name] ?? ""} onChange={(e) => setCount(selectedDate, school, name, Number(e.target.value) || 0)} />
           </label>
         ))}
       </div>
@@ -799,7 +907,7 @@ function StockView() {
         </tbody>
       </table>
       <form className="mt-4 flex gap-2" onSubmit={(e) => { e.preventDefault(); if (!name.trim()) return; addItem({ name: name.trim(), type: "Entree", source: "Commercial", unit: "cs", per100: 3, par: 4, reorder: 2, opening: 0, location: "Dry" }); setName(""); }}>
-        <input className="field h-10 flex-1 px-2" placeholder="Add product" value={name} onChange={(e) => setName(e.target.value)} />
+        <input className="field h-11 flex-1 px-2" placeholder="Add product" value={name} onChange={(e) => setName(e.target.value)} />
         <Button variant="primary" size="sm">Add</Button>
       </form>
     </div>
@@ -878,8 +986,8 @@ function LookMaker({ month, fallback }: { month: string; fallback: { title: stri
   const look = copy.months[month] ?? { title: "", honor: "" };
   return (
     <div className="space-y-2">
-      <DebouncedText key={`${month}-title`} className="field h-10 w-full px-2" value={look.title} placeholder={fallback.title} onCommit={(v) => setMonthCopy(month, { title: v })} />
-      <DebouncedText key={`${month}-honor`} className="field h-10 w-full px-2" value={look.honor} placeholder={fallback.honor} onCommit={(v) => setMonthCopy(month, { honor: v })} />
+      <DebouncedText key={`${month}-title`} className="field h-11 w-full px-2" value={look.title} placeholder={fallback.title} onCommit={(v) => setMonthCopy(month, { title: v })} />
+      <DebouncedText key={`${month}-honor`} className="field h-11 w-full px-2" value={look.honor} placeholder={fallback.honor} onCommit={(v) => setMonthCopy(month, { honor: v })} />
       <div className="flex flex-wrap gap-1">
         {ICONS.map((ic) => (
           <button key={ic.name} type="button" className="rounded-full bg-paper px-2 py-1 text-lg" onClick={() => {
@@ -919,7 +1027,7 @@ function FooterMaker() {
       <Switch checked={bits.legal === "full"} onChange={(v) => patchCopy({ bits: { ...bits, legal: v ? "full" : "short" } })} label="Full USDA statement on print" />
       <DebouncedText multiline className="field w-full p-2 text-sm" value={copy.alts} placeholder={ALTS} onCommit={(v) => patchCopy({ alts: v })} />
       <DebouncedText multiline className="field w-full p-2 text-sm" value={copy.breakfast} placeholder={BREAKFAST} onCommit={(v) => patchCopy({ breakfast: v })} />
-      <DebouncedText className="field h-10 w-full px-2" value={copy.contact} placeholder={CONTACT} onCommit={(v) => patchCopy({ contact: v })} />
+      <DebouncedText className="field h-11 w-full px-2" value={copy.contact} placeholder={CONTACT} onCommit={(v) => patchCopy({ contact: v })} />
     </div>
   );
 }
@@ -930,9 +1038,9 @@ const MemoDayCell = memo(function MenuDayCell({
   date: string; dayNum: number; inMonth: boolean; on: boolean; status: string; lines: string[]; onOpen: (date: string) => void;
 }) {
   return (
-    <td className="overflow-hidden border-t border-l border-navy/25 p-0 align-top">
+    <td className="border-t border-l border-navy/25 p-0 align-top">
       <button type="button" disabled={!inMonth} onClick={() => inMonth && onOpen(date)} className={cn(
-        "flex min-h-[4.25rem] w-full flex-col overflow-hidden p-1 text-left md:min-h-[7.5rem] md:p-2.5",
+        "flex min-h-16 w-full flex-col p-1 text-left md:min-h-[7.5rem] md:p-2.5",
         !inMonth && "bg-closed text-navy/40",
         status === "Breakfast only" && inMonth && "bg-gold text-navy",
         status !== "Serve" && status !== "Breakfast only" && inMonth && "bg-closed text-navy",
@@ -1021,24 +1129,24 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
       <style>{`@media print { @page { size: letter ${orient}; margin: 0.22in; } }`}</style>
       <div className="no-print shrink-0 border-b border-line">
         <div className="flex flex-col gap-1.5 px-3 py-2 md:flex-row md:items-center md:gap-2 md:px-4">
-          <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
             {MONTHS.map((mo) => {
               const key = `${mo.y}-${String(mo.m).padStart(2, "0")}`;
-              return <button key={key} className={cn("h-9 shrink-0 rounded-full px-3 text-sm font-semibold", key === printMonth ? "bg-navy text-cream" : "bg-cream")} onClick={() => setPrintMonth(key)}>{new Date(mo.y, mo.m - 1, 1).toLocaleDateString("en-US", { month: "short" })}</button>;
+              return <button key={key} className={cn("h-11 min-h-11 shrink-0 rounded-full px-3 text-sm font-semibold", key === printMonth ? "bg-navy text-cream" : "bg-cream text-navy")} onClick={() => setPrintMonth(key)}>{new Date(mo.y, mo.m - 1, 1).toLocaleDateString("en-US", { month: "short" })}</button>;
             })}
           </div>
           <div className="hidden items-center gap-1 md:flex">
             <Switch checked={copy.weekCol} onChange={(v) => patchCopy({ weekCol: v })} label="Week of" />
             <Switch checked={orient === "portrait"} onChange={(v) => patchCopy({ orient: v ? "portrait" : "landscape" })} label="Portrait" />
-            <button type="button" className={cn("h-10 shrink-0 rounded-full px-3 text-sm font-semibold", isSlimBits(bits) ? "bg-navy text-cream" : "bg-cream text-muted")} onClick={() => patchCopy({ bits: slimBits() })}>Slim</button>
-            <button type="button" className={cn("h-10 shrink-0 rounded-full px-3 text-sm font-semibold", !isSlimBits(bits) ? "bg-navy text-cream" : "bg-cream text-muted")} onClick={() => patchCopy({ bits: fullBits() })}>Full</button>
+            <button type="button" className={cn("h-11 min-h-11 shrink-0 rounded-full px-3 text-sm font-semibold", isSlimBits(bits) ? "bg-navy text-cream" : "bg-cream text-navy")} onClick={() => patchCopy({ bits: slimBits() })}>Slim</button>
+            <button type="button" className={cn("h-11 min-h-11 shrink-0 rounded-full px-3 text-sm font-semibold", !isSlimBits(bits) ? "bg-navy text-cream" : "bg-cream text-navy")} onClick={() => patchCopy({ bits: fullBits() })}>Full</button>
             <Button size="sm" onClick={() => void familyHtml().then((m) => m.previewFamilyPage(useDesk.getState()))}>Preview</Button>
             <Button size="sm" onClick={() => void familyHtml().then((m) => m.downloadFamilyPage(useDesk.getState()))}><FileDown className="size-4" /> HTML</Button>
             <Button size="sm" onClick={() => void menuFeed().then((m) => m.downloadMenuFeed(useDesk.getState()))}>JSON</Button>
           </div>
           <div className="flex gap-2 md:shrink-0">
             <Button className="min-h-11 flex-1 md:hidden" onClick={() => setSheet(true)}>Edit</Button>
-            <Button variant="primary" className="min-h-11 flex-1 md:h-9 md:min-h-9 md:flex-none" size="sm" onClick={() => window.print()}><Printer className="size-4" /> Print</Button>
+            <Button variant="primary" className="min-h-11 flex-1 md:flex-none" size="sm" onClick={() => window.print()}><Printer className="size-4" /> Print</Button>
           </div>
         </div>
       </div>
@@ -1055,14 +1163,14 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
                   <p className="menu-month mt-1 font-display text-[clamp(2.4rem,16vw,6.2rem)] leading-[0.82]">{monthName}</p>
                 </div>
                 <div className="md:text-right">
-                  <p className="inline-block rounded-sm bg-harvest px-2.5 py-1 font-display text-lg tracking-[0.12em]">{BRAND.meals} {y}</p>
-                  <p className="mt-2 truncate text-sm text-cream/85">{title}</p>
-                  <p className="hidden truncate text-[12px] text-gold md:block">{honor}</p>
+                  <p className="inline-block rounded-sm bg-cream px-2.5 py-1 font-display text-lg tracking-[0.12em] text-navy">{BRAND.meals} {y}</p>
+                  <p className="mt-2 text-sm text-cream">{title}</p>
+                  <p className="hidden text-xs text-gold md:block">{honor}</p>
                 </div>
               </div>
             </header>
             {bits.cepBar && (
-              <div className="menu-cep bg-harvest px-3 py-2 text-center text-lg font-bold leading-snug text-cream">
+              <div className="menu-cep bg-navy px-3 py-2 text-center text-lg font-bold leading-snug text-cream">
                 {isSlimBits(bits) ? "Free breakfast and lunch for every student." : `Free breakfast and lunch for every student. ${CEP}`}
               </div>
             )}
@@ -1072,7 +1180,7 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
                 <tr>
                   {copy.weekCol && <th scope="col" className="hidden w-16 bg-navy px-1 py-2 text-left font-display text-sm text-cream md:table-cell">Week</th>}
                   {WEEKDAYS.map((lab) => (
-                    <th key={lab} scope="col" className={cn("menu-dow px-0.5 py-2 text-center text-sm font-bold text-cream md:text-lg", lab === "Saturday" || lab === "Sunday" ? "bg-navy-2" : "bg-navy md:bg-harvest")}>
+                    <th key={lab} scope="col" className={cn("menu-dow px-0.5 py-2 text-center text-sm font-bold text-cream md:text-lg", lab === "Saturday" || lab === "Sunday" ? "bg-navy-2" : "bg-navy")}>
                       <span className="md:hidden">{lab.slice(0, 2)}</span><span className="hidden md:inline">{lab}</span>
                     </th>
                   ))}
@@ -1096,9 +1204,9 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
               {bits.ovs && <p>{OVS}</p>}
               {(bits.allergy || bits.change) && <p>{bits.allergy ? ALLERGY : ""} {bits.change ? CHANGE : ""}</p>}
               {bits.contact && <button type="button" className="block w-full bg-navy px-3 py-2 text-left font-display text-lg text-cream" onClick={() => { setPane("footer"); setSheet(true); }}>{contact}</button>}
-              <p className="menu-legal text-[11px] leading-relaxed text-navy/80">{bits.legal === "full" ? LEGAL_FULL : LEGAL_SHORT}</p>
-              {bits.langs && <p className="text-[12px] font-semibold">{LANG_LINE}</p>}
-              <p className="text-[11px] text-muted"><a href={MENU_PAGE} className="underline">District menus</a></p>
+              <p className="menu-legal text-xs leading-snug text-navy">{bits.legal === "full" ? LEGAL_FULL : LEGAL_SHORT}</p>
+              {bits.langs && <p className="text-xs font-semibold">{LANG_LINE}</p>}
+              <p className="text-xs text-navy"><a href={MENU_PAGE} className="inline-flex min-h-11 items-center font-semibold text-harvest-text underline">District menus</a></p>
             </footer>
           </article>
         </div>
@@ -1106,17 +1214,17 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
         <aside className={cn("no-print bg-cream md:static md:max-h-none md:w-80 md:overflow-auto md:border-l-4 md:border-harvest", "fixed inset-x-0 bottom-14 z-40 max-h-[70vh] overflow-auto rounded-t-2xl border-t-4 border-harvest", !sheet && "hidden md:block")}>
           <div className="flex items-center gap-1 p-2">
             {(["day", "look", "defaults", "footer"] as const).map((p) => (
-              <button key={p} className={cn("h-9 rounded-full px-3 text-sm font-semibold capitalize", pane === p ? "bg-navy text-cream" : "bg-paper")} onClick={() => setPane(p)}>{p}</button>
+              <button key={p} className={cn("h-11 min-h-11 rounded-full px-3 text-sm font-semibold capitalize", pane === p ? "bg-navy text-cream" : "bg-paper text-navy")} onClick={() => setPane(p)}>{p}</button>
             ))}
-            <button type="button" className="ml-auto h-9 rounded-full px-3 text-sm font-semibold md:hidden" onClick={() => setSheet(false)}>Done</button>
+            <button type="button" className="ml-auto inline-flex h-11 min-h-11 items-center rounded-full px-3 text-sm font-semibold md:hidden" onClick={() => setSheet(false)}>Done</button>
           </div>
           <div className="space-y-2 border-b border-line px-3 pb-3 md:hidden">
             <p className="kicker">Flyer</p>
             <div className="flex flex-wrap gap-2">
               <Switch checked={copy.weekCol} onChange={(v) => patchCopy({ weekCol: v })} label="Week of" />
               <Switch checked={orient === "portrait"} onChange={(v) => patchCopy({ orient: v ? "portrait" : "landscape" })} label="Portrait" />
-              <button type="button" className={cn("h-10 rounded-full px-3 text-sm font-semibold", isSlimBits(bits) ? "bg-navy text-cream" : "bg-paper text-navy")} onClick={() => patchCopy({ bits: slimBits() })}>Slim</button>
-              <button type="button" className={cn("h-10 rounded-full px-3 text-sm font-semibold", !isSlimBits(bits) ? "bg-navy text-cream" : "bg-paper text-navy")} onClick={() => patchCopy({ bits: fullBits() })}>Full</button>
+              <button type="button" className={cn("h-11 rounded-full px-3 text-sm font-semibold", isSlimBits(bits) ? "bg-navy text-cream" : "bg-paper text-navy")} onClick={() => patchCopy({ bits: slimBits() })}>Slim</button>
+              <button type="button" className={cn("h-11 rounded-full px-3 text-sm font-semibold", !isSlimBits(bits) ? "bg-navy text-cream" : "bg-paper text-navy")} onClick={() => patchCopy({ bits: fullBits() })}>Full</button>
             </div>
           </div>
           <div className="p-3">
@@ -1193,10 +1301,10 @@ function TripsView() {
       <h1 className="font-display text-3xl">Field trip bags</h1>
       <p className="text-sm text-muted">Pack the school day before. {BAG.sandwich}, {BAG.fruit}, {BAG.veg}, {BAG.milk}.</p>
       <form className="mt-3 flex flex-wrap gap-2" onSubmit={(e) => { e.preventDefault(); addTrip({ ...form, time: "9:00", bags: true, note: "", students: [] }); }}>
-        <input className="field h-10 px-2" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-        <input className="field h-10 px-2" placeholder="Class / group" value={form.group} onChange={(e) => setForm({ ...form, group: e.target.value })} />
-        <input className="field h-10 w-20 px-2" type="number" value={form.count} onChange={(e) => setForm({ ...form, count: Number(e.target.value) || 0 })} />
-        <input className="field h-10 px-2" placeholder="Teacher" value={form.teacher} onChange={(e) => setForm({ ...form, teacher: e.target.value })} />
+        <input className="field h-11 px-2" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+        <input className="field h-11 px-2" placeholder="Class / group" value={form.group} onChange={(e) => setForm({ ...form, group: e.target.value })} />
+        <input className="field h-11 w-20 px-2" type="number" value={form.count} onChange={(e) => setForm({ ...form, count: Number(e.target.value) || 0 })} />
+        <input className="field h-11 px-2" placeholder="Teacher" value={form.teacher} onChange={(e) => setForm({ ...form, teacher: e.target.value })} />
         <Button variant="primary" size="sm">Add trip</Button>
       </form>
       <ul className="mt-4 space-y-2">
