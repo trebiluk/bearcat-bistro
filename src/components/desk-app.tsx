@@ -12,7 +12,6 @@ import {
   Phone,
   Printer,
   Sun,
-  UtensilsCrossed,
   Warehouse,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -394,51 +393,29 @@ export function DeskApp() {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem("bb-whats-new") !== "2026.10.03") setNews(true);
+      if (localStorage.getItem("bb-whats-new") !== "2026.10.04") setNews(true);
     } catch {
       setNews(true);
     }
-    const classic = () => {
-      const q = new URLSearchParams(window.location.search);
-      if (q.get("hub") === "classic" || q.get("theme") === "classic") return true;
-      try {
-        return localStorage.getItem("tech-room-hub") === "classic";
-      } catch {
-        return false;
-      }
+    // Staff chrome stays English and left-to-right. Hub language applies only on the family flyer.
+    const lockStaff = () => {
+      const root = document.documentElement;
+      if (root.lang !== "en") root.lang = "en";
+      if (root.dir !== "ltr") root.dir = "ltr";
     };
-    const applyHub = (lang: string | null) => {
-      if (classic() || !lang) {
-        document.documentElement.lang = "en";
-        document.documentElement.dir = "ltr";
-        return;
-      }
-      const rtl = lang === "ar" || lang === "fa-AF" || lang === "fa";
-      document.documentElement.lang = lang === "simple" ? "en" : lang;
-      document.documentElement.dir = rtl ? "rtl" : "ltr";
-    };
-    const readHub = () => {
-      if (classic()) return null;
-      const q = new URLSearchParams(window.location.search).get("lang");
-      if (q) return q;
-      try {
-        const raw = JSON.parse(localStorage.getItem("kulibert-prefs-v1") || "null") as { lang?: string } | null;
-        return raw?.lang || null;
-      } catch {
-        return null;
-      }
-    };
-    applyHub(readHub());
+    lockStaff();
     const onMsg = (e: MessageEvent) => {
-      const data = e.data as { type?: string; lang?: string } | null;
-      if (data?.type === "kp-lang") applyHub(data.lang || null);
+      const data = e.data as { type?: string } | null;
+      if (data?.type === "kp-lang") lockStaff();
     };
-    const onHub = () => applyHub(readHub());
+    const obs = new MutationObserver(lockStaff);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["dir", "lang"] });
     window.addEventListener("message", onMsg);
-    window.addEventListener("kulibert-lang", onHub);
+    window.addEventListener("kulibert-lang", lockStaff);
     return () => {
+      obs.disconnect();
       window.removeEventListener("message", onMsg);
-      window.removeEventListener("kulibert-lang", onHub);
+      window.removeEventListener("kulibert-lang", lockStaff);
     };
   }, []);
 
@@ -463,13 +440,13 @@ export function DeskApp() {
   }, [go]);
 
   return (
-    <div className="relative flex h-dvh min-h-0 flex-col bg-paper text-ink">
+    <div dir="ltr" lang="en" className="relative flex h-dvh min-h-0 flex-col bg-paper text-ink">
       <a href="#main" className="skip-link no-print">Skip to menu</a>
-      <header className="app-bar no-print shrink-0 bg-navy text-cream">
-        <div className="flex min-h-14 flex-wrap items-center gap-2 px-3 md:gap-3 md:px-5">
+      <header dir="ltr" className="app-bar no-print shrink-0 bg-navy text-cream">
+        <div className="flex min-h-14 flex-wrap items-center gap-2 pl-3 pr-3 md:gap-3 md:pr-5">
           <button
             type="button"
-            className="inline-flex h-11 min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-cream md:hidden"
+            className="inline-flex h-11 min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-cream"
             aria-label="Menu"
             aria-expanded={drawer}
             onClick={() => setDrawer((v) => !v)}
@@ -482,9 +459,6 @@ export function DeskApp() {
             <p className="font-display text-lg leading-none tracking-[0.04em] md:text-[1.85rem]">{BRAND.name}</p>
           </div>
           <nav className="ml-3 hidden gap-1 md:flex" aria-label="Main">
-            <Button variant="nav" aria-current={onMenu ? "page" : undefined} className={cn("rounded-full px-4", onMenu && "bg-cream/15 text-cream")} onClick={() => go("print")}>
-              <UtensilsCrossed className="size-4" /> Menu
-            </Button>
             <Button variant="nav" aria-current={onKitchen ? "page" : undefined} className={cn("rounded-full px-4", onKitchen && "bg-cream/15 text-cream")} onClick={() => go(onMenu || view === "help" || view === "brand" || onLearn ? "desk" : view)}>
               <ClipboardList className="size-4" /> Kitchen
             </Button>
@@ -524,7 +498,7 @@ export function DeskApp() {
             type="button"
             className="inline-flex h-11 min-h-11 items-center rounded-full bg-navy px-3 text-sm font-semibold text-cream"
             onClick={() => {
-              try { localStorage.setItem("bb-whats-new", "2026.10.03"); } catch { /* */ }
+              try { localStorage.setItem("bb-whats-new", "2026.10.04"); } catch { /* */ }
               setNews(false);
             }}
           >
@@ -534,8 +508,8 @@ export function DeskApp() {
       )}
       {drawer && (
         <>
-          <button type="button" className="no-print fixed inset-0 z-30 bg-navy/40 md:hidden" aria-label="Close menu" onClick={() => setDrawer(false)} />
-          <nav className="no-print fixed inset-y-0 left-0 z-40 flex w-72 flex-col gap-1 overflow-auto bg-cream p-3 text-navy shadow-card md:hidden" aria-label="Menu">
+          <button type="button" className="no-print fixed inset-0 z-30 bg-navy/40" aria-label="Close menu" onClick={() => setDrawer(false)} />
+          <nav dir="ltr" className="no-print fixed inset-y-0 left-0 z-40 flex w-72 flex-col gap-1 overflow-auto bg-cream p-3 text-navy shadow-card" aria-label="Menu">
             <p className="px-2 text-xs font-semibold text-muted">Menu</p>
             {([
               ["print", "Menu"],
@@ -1037,24 +1011,22 @@ const MemoDayCell = memo(function MenuDayCell({
 }: {
   date: string; dayNum: number; inMonth: boolean; on: boolean; status: string; lines: string[]; onOpen: (date: string) => void;
 }) {
+  if (!inMonth) {
+    return <td className="border-t border-l border-navy/25 bg-closed p-0 align-top" aria-hidden="true" />;
+  }
   return (
     <td className="border-t border-l border-navy/25 p-0 align-top">
-      <button type="button" disabled={!inMonth} onClick={() => inMonth && onOpen(date)} className={cn(
+      <button type="button" onClick={() => onOpen(date)} aria-label={`${date}${lines[0] ? `, ${lines[0]}` : ""}`} className={cn(
         "flex min-h-16 w-full flex-col p-1 text-left md:min-h-[7.5rem] md:p-2.5",
-        !inMonth && "bg-closed text-navy/40",
-        status === "Breakfast only" && inMonth && "bg-gold text-navy",
-        status !== "Serve" && status !== "Breakfast only" && inMonth && "bg-closed text-navy",
-        inMonth && "hover:bg-gold/50",
+        status === "Breakfast only" && "bg-gold text-navy",
+        status !== "Serve" && status !== "Breakfast only" && "bg-closed text-navy",
+        "hover:bg-gold/50",
         on && "bg-gold ring-2 ring-inset ring-harvest print:ring-0",
       )}>
-        {inMonth && (
-          <>
-            <span className="menu-date">{dayNum}</span>
-            <div className="mt-1 min-h-0 space-y-0.5">
-              {lines.map((l, i) => <p key={l} className={i === 0 ? "menu-food-main" : "menu-food-side"}>{l}</p>)}
-            </div>
-          </>
-        )}
+        <span className="menu-date">{dayNum}</span>
+        <div className="mt-1 min-h-0 space-y-0.5">
+          {lines.map((l, i) => <p key={l} lang="en" className={i === 0 ? "menu-food-main" : "menu-food-side"}>{l}</p>)}
+        </div>
       </button>
     </td>
   );
@@ -1153,7 +1125,7 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
       {monthFlags.length > 0 && <p className="no-print bg-bad-bg px-4 py-2 text-sm text-bad">{monthFlags.length} days need a look this month.</p>}
       <div className="flex min-h-0 flex-1">
         <div className="min-h-0 flex-1 overflow-auto p-0 md:p-4 print:overflow-visible print:p-0">
-          <article className={cn("menu-sheet mx-auto overflow-hidden bg-cream md:rounded-2xl md:border md:border-line print:rounded-none print:border-0", orient === "portrait" ? "max-w-[780px] orient-portrait" : "max-w-[1200px] orient-landscape")}>
+          <article lang="en" className={cn("menu-sheet mx-auto overflow-hidden bg-cream md:rounded-2xl md:border md:border-line print:rounded-none print:border-0", orient === "portrait" ? "max-w-[780px] orient-portrait" : "max-w-[1200px] orient-landscape")}>
             <header className="menu-mast bg-navy text-cream" onClick={() => { setPane("look"); setSheet(true); }}>
               <div className="flex flex-col gap-2 px-4 py-3 md:flex-row md:items-end md:justify-between md:px-5 md:py-4">
                 <div>

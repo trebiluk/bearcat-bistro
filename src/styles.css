@@ -117,7 +117,10 @@
     font-weight: 700;
     line-height: 1.25;
     color: var(--color-navy);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
   .menu-food-side {
     font-size: 0.8rem;
@@ -150,7 +153,10 @@
   .menu-food-main {
     font-size: 0.75rem;
     line-height: 1.25;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
   .menu-food-side { display: none; }
   .menu-mast > div { padding: 8px 12px; gap: 4px; }

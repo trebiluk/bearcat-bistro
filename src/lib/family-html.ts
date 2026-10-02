@@ -75,7 +75,7 @@ table.cal td.today{box-shadow:inset 0 0 0 2px var(--harvest)}
 table.cal td.holy{background:var(--gold)}
 table.cal td button{all:unset;display:block;width:100%;height:100%;cursor:pointer;font-family:Barlow,sans-serif}
 .num{font-family:"Bebas Neue",sans-serif;font-size:20px;color:var(--navy)}
-.food{font-weight:700;font-size:13px;line-height:1.25;margin-top:4px;overflow-wrap:anywhere}
+.food{font-weight:700;font-size:13px;line-height:1.25;margin-top:4px;overflow-wrap:break-word;word-break:normal;hyphens:auto}
 .holy{font-size:12px;color:var(--muted);font-weight:500;margin-top:3px}
 .side{font-size:13px;color:var(--muted);line-height:1.45}
 .breakfast{background:var(--gold);border-radius:12px;padding:12px 14px;color:var(--navy);font-size:13px;line-height:1.4;margin:12px 0}

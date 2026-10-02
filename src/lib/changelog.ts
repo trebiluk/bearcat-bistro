@@ -94,6 +94,14 @@ export const HISTORY: JournalEntry[] = [
     school: "all",
   },
   {
+    id: "h-rtl",
+    date: "2026-10-04",
+    kind: "app",
+    title: "Menu stays left 2026.10.04-rtl",
+    body: "Staff desk stays left-to-right English so Hub Arabic and Dari do not move Menu or reverse sentences. The family flyer still follows the Tech Room language. Dish names hyphenate instead of breaking mid-word.",
+    school: "all",
+  },
+  {
     id: "h-family",
     date: "2026-09-06",
     kind: "app",
