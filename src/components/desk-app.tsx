@@ -393,7 +393,7 @@ export function DeskApp() {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem("bb-whats-new") !== "2026.10.04") setNews(true);
+      if (localStorage.getItem("bb-whats-new") !== "2026.10.05") setNews(true);
     } catch {
       setNews(true);
     }
@@ -498,7 +498,7 @@ export function DeskApp() {
             type="button"
             className="inline-flex h-11 min-h-11 items-center rounded-full bg-navy px-3 text-sm font-semibold text-cream"
             onClick={() => {
-              try { localStorage.setItem("bb-whats-new", "2026.10.04"); } catch { /* */ }
+              try { localStorage.setItem("bb-whats-new", "2026.10.05"); } catch { /* */ }
               setNews(false);
             }}
           >
@@ -605,7 +605,7 @@ export function DeskApp() {
         <SiteLegalBar />
         <span>{CONTACT}</span>
         <span className="text-xs font-semibold text-navy">{APP_VERSION}</span>
-        <button className="inline-flex h-11 min-h-11 items-center tabular-nums text-muted" onClick={() => go("debug")}>{APP_PLATE}</button>
+        <button type="button" className="inline-flex h-11 min-h-11 shrink-0 items-center whitespace-nowrap px-2 text-sm font-semibold tabular-nums text-navy" aria-label={`Version ${APP_PLATE}`} onClick={() => go("debug")}>Version {APP_PLATE}</button>
         <BackupBar />
       </footer>
       <nav className="no-print flex h-14 shrink-0 border-t border-line bg-cream pb-[env(safe-area-inset-bottom)] md:hidden">
@@ -1146,7 +1146,38 @@ function PrintView({ reds }: { reds: { date: string; hints: string[] }[] }) {
                 {isSlimBits(bits) ? "Free breakfast and lunch for every student." : `Free breakfast and lunch for every student. ${CEP}`}
               </div>
             )}
-            <table className="w-full min-w-0 table-fixed border-t-2 border-navy text-ink">
+            <ol className="phone-days no-print">
+              {grid.flatMap((row) => row.cells).filter((cell) => cell.inMonth).map((cell) => {
+                const dow = WEEKDAYS[parseIso(cell.date).getDay()] ?? "";
+                const food = cell.lines[0] || cell.status || "No lunch";
+                return (
+                  <li key={cell.date}>
+                    <button
+                      type="button"
+                      onClick={() => openDay(cell.date)}
+                      aria-label={`${dow} ${cell.date}, ${food}`}
+                      className={cn(
+                        "flex min-h-11 w-full items-start gap-3 border-b border-line px-3 py-2 text-left",
+                        cell.status === "Breakfast only" && "bg-gold",
+                        cell.status !== "Serve" && cell.status !== "Breakfast only" && "bg-closed",
+                        cell.status === "Serve" && cell.date === selectedDate && pane === "day" && "bg-gold",
+                      )}
+                    >
+                      <span className="w-10 shrink-0 pt-0.5 font-display text-2xl leading-none text-navy">{cell.dayNum}</span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-xs font-semibold text-navy">{dow}</span>
+                        {cell.lines.length > 0 ? cell.lines.map((l, i) => (
+                          <p key={`${cell.date}-${i}`} lang="en" className={i === 0 ? "menu-food-main" : "menu-food-side"}>{l}</p>
+                        )) : (
+                          <p lang="en" className="menu-food-main">{cell.status || "No lunch"}</p>
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <table className="menu-grid w-full min-w-0 table-fixed border-t-2 border-navy text-ink">
               <caption className="sr-only">{monthName} {y} lunch calendar, Sunday through Saturday</caption>
               <thead>
                 <tr>

@@ -146,6 +146,7 @@
   .place-bar {
     box-shadow: 0 1px 0 rgba(19, 36, 60, 0.12);
   }
+  .phone-days { display: none; }
 }
 
 @media screen and (max-width: 767px) {
@@ -166,6 +167,27 @@
     contain-intrinsic-size: auto 4.5rem;
   }
   .menu-dow { padding: 4px 0; font-size: 0.75rem; }
+}
+
+@media screen and (max-width: 480px) {
+  .menu-grid { display: none; }
+  .phone-days {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .phone-days .menu-food-main,
+  .phone-days .menu-food-side {
+    display: block;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: manual;
+    -webkit-hyphens: manual;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
 }
 
 @media screen {
@@ -208,6 +230,8 @@
 
 @media print {
   .no-print { display: none !important; }
+  .phone-days { display: none !important; }
+  .menu-grid { display: table !important; }
   .print-daily { display: block !important; }
   .nutrition-sheet { display: block !important; }
   html, body, #app, main, .print-split {

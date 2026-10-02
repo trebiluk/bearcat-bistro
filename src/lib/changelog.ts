@@ -102,6 +102,14 @@ export const HISTORY: JournalEntry[] = [
     school: "all",
   },
   {
+    id: "h-phone-list",
+    date: "2026-10-05",
+    kind: "app",
+    title: "Phone day list 2026.10.05",
+    body: "On a phone the month is one day per row so dish names wrap only at spaces. The printed Sunday–Saturday flyer is unchanged.",
+    school: "all",
+  },
+  {
     id: "h-family",
     date: "2026-09-06",
     kind: "app",

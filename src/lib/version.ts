@@ -3,9 +3,9 @@ import { CYCLE, FIRST_STUDENT, LAST_STUDENT, YEAR_DAYS, officialStatus } from ".
 import { BRAND } from "./brand";
 
 export const APP_NAME = BRAND.name;
-export const APP_VERSION = "2026.10.04-rtl";
-export const APP_PLATE = "v2026.10.04";
-export const WHATS_NEW = "Menu stays at the top left in every language.";
+export const APP_VERSION = "2026.10.05";
+export const APP_PLATE = "v2026.10.05";
+export const WHATS_NEW = "Dish names fit on phones without breaking words.";
 export const APP_CHANNEL = import.meta.env.DEV ? "preview" : "live";
 
 export function storageReport() {
