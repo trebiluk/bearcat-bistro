@@ -147,6 +147,7 @@
     box-shadow: 0 1px 0 rgba(19, 36, 60, 0.12);
   }
   .phone-days { display: none; }
+  .menu-sheet { container-type: inline-size; container-name: flyer; }
 }
 
 @media screen and (max-width: 767px) {
@@ -170,6 +171,12 @@
 }
 
 @media screen and (max-width: 480px) {
+  .menu-dow { padding: 4px 0; font-size: 0.75rem; }
+}
+
+/* Day list whenever a 7-column cell would be under ~90px of text.
+   1280 and 1366 stay on the grid. Print forces the grid back. */
+@container flyer (max-width: 900px) {
   .menu-grid { display: none; }
   .phone-days {
     display: flex;

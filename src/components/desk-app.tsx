@@ -393,7 +393,7 @@ export function DeskApp() {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem("bb-whats-new") !== "2026.10.05") setNews(true);
+      if (localStorage.getItem("bb-whats-new") !== "2026.10.06") setNews(true);
     } catch {
       setNews(true);
     }
@@ -498,7 +498,7 @@ export function DeskApp() {
             type="button"
             className="inline-flex h-11 min-h-11 items-center rounded-full bg-navy px-3 text-sm font-semibold text-cream"
             onClick={() => {
-              try { localStorage.setItem("bb-whats-new", "2026.10.05"); } catch { /* */ }
+              try { localStorage.setItem("bb-whats-new", "2026.10.06"); } catch { /* */ }
               setNews(false);
             }}
           >

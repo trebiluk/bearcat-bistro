@@ -110,6 +110,14 @@ export const HISTORY: JournalEntry[] = [
     school: "all",
   },
   {
+    id: "h-sideways",
+    date: "2026-10-06",
+    kind: "app",
+    title: "Sideways phones 2026.10.06",
+    body: "The day list shows whenever a calendar column would be too narrow, including a phone held sideways. Wide desks and the printed flyer keep the Sunday–Saturday grid.",
+    school: "all",
+  },
+  {
     id: "h-family",
     date: "2026-09-06",
     kind: "app",
